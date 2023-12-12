@@ -1,14 +1,14 @@
 import {render, RenderPosition} from '../render.js';
-import FiltersView from '../view/filters-view.js';
+import Filters from '../view/filters.js';
 import TripInfo from '../view/trip-info.js';
-import TripInfoMain from '../view/trip-info-main.js';
-import TripInfoCost from '../view/trip-info-cost.js';
+import TripInfoContent from '../view/trip-info-content.js';
+import TripCost from '../view/trip-cost.js';
 
 export default class PresenterHeader {
-  filtersComponent = new FiltersView();
+  filtersComponent = new Filters();
   tripInfoComponent = new TripInfo();
-  tripInfoMainComponent = new TripInfoMain();
-  tripInfoCostComponent = new TripInfoCost();
+  tripInfoMainComponent = new TripInfoContent();
+  tripInfoCostComponent = new TripCost();
 
   constructor ({presenterContainer}) {
     this.presenterContainer = presenterContainer;

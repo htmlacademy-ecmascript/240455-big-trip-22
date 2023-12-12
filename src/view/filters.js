@@ -1,6 +1,6 @@
 import {createElement} from '../render.js';
 
-function createFiltersView() {
+function createFilters() {
   return `<form class="trip-filters" action="#" method="get">
             <div class="trip-filters__filter">
               <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything">
@@ -26,9 +26,9 @@ function createFiltersView() {
           </form>`;
 }
 
-export default class FiltersView {
+export default class Filters {
   getTemplate () {
-    return createFiltersView();
+    return createFilters();
   }
 
   getElement() {

@@ -4,7 +4,7 @@ function createEventListItem() {
   return '<li class="trip-events__item"></li>';
 }
 
-export default class EventItemList {
+export default class EventsListItem {
   getTemplate () {
     return createEventListItem();
   }

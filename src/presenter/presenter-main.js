@@ -1,16 +1,15 @@
 import {render} from '../render.js';
-import SortingView from '../view/sorting-view.js';
+import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
-import EventsListItem from '../view/event-list-item.js';
-import FormAddPoint from '../view/new-point-view.js';
+import EventsListItem from '../view/events-list-item.js';
 import Event from '../view/event.js';
-
+import NewPoint from '../view/new-point.js';
 
 export default class PresenterMain {
-  sortingComponent = new SortingView();
+  sortingComponent = new Sorting();
   eventsListComponent = new EventsList();
   eventListItemComponent = new EventsListItem();
-  formComponent = new FormAddPoint();
+  formComponent = new NewPoint();
 
   constructor ({presenterContainer}) {
     this.presenterContainer = presenterContainer;

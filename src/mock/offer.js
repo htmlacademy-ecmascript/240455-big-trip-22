@@ -1,4 +1,4 @@
-import { OFFERS } from '../const';
+import { OFFERS } from './const';
 import { getRandomArrayElement, createIdGenerator, getRandomInteger } from '../utils';
 
 

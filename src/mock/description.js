@@ -1,4 +1,4 @@
-import { CITIES, DESCRIPTIONS, PHOTOS_COUNT } from '../const';
+import { CITIES, DESCRIPTIONS, PHOTOS_COUNT } from './const';
 import { getRandomArrayElement, createIdGenerator, getRandomInteger } from '../utils';
 
 

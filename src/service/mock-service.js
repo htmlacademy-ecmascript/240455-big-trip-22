@@ -6,7 +6,7 @@ import { generatePoint } from '../mock/point.js';
 
 const destinationCount = getRandomInteger(1, CITIES.length);
 
-export default class Points {
+export default class MockService {
 
   destinations = [];
   offers = [];
@@ -46,6 +46,7 @@ export default class Points {
   generatePoints() {
     return Array.from({ length: POINTS_COUNT }, () => {
       const type = getRandomArrayElement(TYPES);
+
       const destination = getRandomArrayElement(this.destinations);
       const hasOffers = getRandomInteger(0, 1);
 

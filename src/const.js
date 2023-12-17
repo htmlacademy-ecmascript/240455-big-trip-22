@@ -1,3 +1,5 @@
+const PHOTOS_COUNT = 3;
+
 const TYPES = [
   'taxi',
   'bus',
@@ -10,36 +12,29 @@ const TYPES = [
   'restaurant'
 ];
 
-const PHOTOS_COUNT = 3;
-
 const OFFERS = [
-  {
-    type: 'taxi',
-    offers: [
-      {
-        id: 1,
-        title: 'Upgrade to a business class',
-        price: 120
-      }
-    ]
-  },
-  {
-    type: 'bus',
-    offers: [
-      {
-        id: 1,
-        title: 'Choose seats',
-        price: 40
-      }
-    ]
-  }
+  'Upgrade to a business class', //taxi
+  'Choose the radio station', //taxi
+  'Choose temperature', //taxi
+  'Infotainment system', //bus
+  'Order meal', //bus
+  'Choose seats', //bus
+  'Book a taxi at the arrival point', //train
+  'Order a breakfast', //train
+  'Wake up at a certain time', //train
+  'Choose meal', //flight
+  'Choose seats', //flight
+  'Upgrade to comfort class', //flight
+  'Choose the time of check-in', //check-in
+  'Choose the time of check-out', //check-in
+  'Add breakfast', //check-in
+  'Add luggage', //ship
+  'Business lounge', //ship
+  'With automatic transmission', //drive
+  'With air conditioning', //drive
+  'Choose live music', //restaurant
+  'Choose VIP area' //restaurant
 ];
-
-// const OFFERS_TYPE = [
-//   'Order Uber',
-//   'Add luggage',
-//   'Switch to comfort',
-// ];
 
 const CITIES = [
   'Moscow',

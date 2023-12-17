@@ -15,7 +15,7 @@
 //   id: generatePointId(),
 //   type: getRandomArrayElement(TYPES), //taxi
 //offers: OFFERS[];
-//   destination: createDestination(),
+//   destination: generateDestination(),
 //   dateFrom: '25/12/23 16:00',
 //   dateTo: '26/12/23 16:00',
 //   isFavorite: getRandomInteger(0, 1),

@@ -1,23 +1,16 @@
-// const generatePointId = createIdGenerator();
-//const generateOfferId = createIdGenerator();
-// const createOffer = () => ({
-//   id: generateOfferId(),
-//type: getRandomArrayElement(TYPES),
-// title: getRandomArrayElement(OFFERS_TYPE),
-//price: ,
-// });
+import { createIdGenerator, getRandomInteger } from '../utils';
 
-// const createOffers = (point.type) => ({
-//   OFFERS.type = point.type;
-// });
+const generatePointId = createIdGenerator();
 
-// const createPoint = () => ({
-//   id: generatePointId(),
-//   type: getRandomArrayElement(TYPES), //taxi
-//offers: OFFERS[];
-//   destination: generateDestination(),
-//   dateFrom: '25/12/23 16:00',
-//   dateTo: '26/12/23 16:00',
-//   isFavorite: getRandomInteger(0, 1),
-//   price: getRandomInteger(20, 100),
-// });
+const createPoint = (type, offersIds, destinationId) => ({
+  id: generatePointId(),
+  type: type,
+  offers: offersIds,
+  destination: destinationId,
+  dateFrom: '25/12/23 16:00',
+  dateTo: '26/12/23 16:00',
+  isFavorite: getRandomInteger(0, 1),
+  price: getRandomInteger(20, 100),
+});
+
+export { createPoint };

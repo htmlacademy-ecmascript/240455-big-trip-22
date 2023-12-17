@@ -1,12 +1,11 @@
 import { CITIES, DESCRIPTIONS, PHOTOS_COUNT } from './const.js';
 import { getRandomArrayElement, createIdGenerator, getRandomInteger } from '../utils.js';
 
+const generateDestinationId = createIdGenerator();
 
 function generateDestination() {
-  const generateDestinationId = createIdGenerator();
-
   const createDescription = () => Array.from(
-    { length: getRandomInteger (1, 5)},
+    { length: getRandomInteger (1, DESCRIPTIONS.length)},
     () => getRandomArrayElement(DESCRIPTIONS),
   ).join(' ');
 

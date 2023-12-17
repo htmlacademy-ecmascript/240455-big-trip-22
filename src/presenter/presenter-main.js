@@ -1,4 +1,4 @@
-import {render} from '../render.js';
+import { render } from '../render.js';
 import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import EventsListItem from '../view/events-list-item.js';

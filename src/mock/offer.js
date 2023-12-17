@@ -1,10 +1,9 @@
 import { OFFERS } from './const.js';
 import { getRandomArrayElement, createIdGenerator, getRandomInteger } from '../utils.js';
 
+const generateOfferId = createIdGenerator();
 
 function generateOffer() {
-  const generateOfferId = createIdGenerator();
-
   return {
     id: generateOfferId(),
     title: getRandomArrayElement(OFFERS),

@@ -1,9 +1,9 @@
-import { TYPES, NAMES, DESCRIPTIONS } from '../const';
+import { CITIES, DESCRIPTIONS, PHOTOS_COUNT } from '../const';
 import { getRandomArrayElement, createIdGenerator, getRandomInteger } from '../utils';
 
 //const generateOfferId = createIdGenerator();
 const generateDestinationId = createIdGenerator();
-const generatePointId = createIdGenerator();
+// const generatePointId = createIdGenerator();
 
 // const createOffer = () => ({
 //   id: generateOfferId(),
@@ -26,24 +26,25 @@ function makePhoto() {
 
 const createDestination = () => ({
   id: generateDestinationId(),
-  name: getRandomArrayElement(NAMES),
+  name: getRandomArrayElement(CITIES),
   description: createDescription(),
-  photos: Array.from({length: getRandomInteger (0, 3)}, makePhoto),
+  photos: Array.from({length: getRandomInteger (0, PHOTOS_COUNT)}, makePhoto),
 });
 
 // const createOffers = (point.type) => ({
 //   OFFERS.type = point.type;
 // });
 
-const createPoint = () => ({
-  id: generatePointId(),
-  type: getRandomArrayElement(TYPES), //taxi
+// const createPoint = () => ({
+//   id: generatePointId(),
+//   type: getRandomArrayElement(TYPES), //taxi
   //offers: OFFERS[];
-  destination: createDestination(),
-  dateFrom: '25/12/23 16:00',
-  dateTo: '26/12/23 16:00',
-  isFavorite: getRandomInteger(0, 1),
-  price: getRandomInteger(20, 100),
-});
+//   destination: createDestination(),
+//   dateFrom: '25/12/23 16:00',
+//   dateTo: '26/12/23 16:00',
+//   isFavorite: getRandomInteger(0, 1),
+//   price: getRandomInteger(20, 100),
+// });
 
-export { createPoint };
+export { createDestination };
+

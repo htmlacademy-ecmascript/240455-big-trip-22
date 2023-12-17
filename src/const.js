@@ -10,6 +10,8 @@ const TYPES = [
   'restaurant'
 ];
 
+const PHOTOS_COUNT = 3;
+
 const OFFERS = [
   {
     type: 'taxi',
@@ -39,7 +41,7 @@ const OFFERS = [
 //   'Switch to comfort',
 // ];
 
-const NAMES = [
+const CITIES = [
   'Moscow',
   'Novosibirsk',
   'Yekaterinburg',
@@ -62,4 +64,4 @@ const DESCRIPTIONS = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
-export { TYPES, OFFERS, NAMES, DESCRIPTIONS };
+export { TYPES, OFFERS, CITIES, DESCRIPTIONS, PHOTOS_COUNT };

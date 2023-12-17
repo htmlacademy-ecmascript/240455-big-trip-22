@@ -31,9 +31,7 @@ export default class MockService {
   }
 
   generateDestinations() {
-    return Array.from({ length: destinationCount }, () => {
-      generateDestination();
-    });
+    return Array.from({ length: destinationCount }, () => generateDestination());
   }
 
   generateOffers() {

@@ -10,7 +10,7 @@ function generateDestination() {
     () => getRandomArrayElement(DESCRIPTIONS),
   ).join(' ');
 
-  const description = createDescription().trim();
+  const description = createDescription();
 
   function makePhoto() {
     return {

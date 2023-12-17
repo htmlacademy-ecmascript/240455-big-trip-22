@@ -1,5 +1,5 @@
-import { CITIES, DESCRIPTIONS, PHOTOS_COUNT } from './const';
-import { getRandomArrayElement, createIdGenerator, getRandomInteger } from '../utils';
+import { CITIES, DESCRIPTIONS, PHOTOS_COUNT } from './const.js';
+import { getRandomArrayElement, createIdGenerator, getRandomInteger } from '../utils.js';
 
 
 function generateDestination() {

@@ -1,8 +1,8 @@
-import { createIdGenerator, getRandomInteger } from '../utils';
+import { createIdGenerator, getRandomInteger } from '../utils.js';
 
 const generatePointId = createIdGenerator();
 
-const createPoint = (type, offersIds, destinationId) => ({
+const generatePoint = (type, offersIds, destinationId) => ({
   id: generatePointId(),
   type: type,
   offers: offersIds,
@@ -13,4 +13,4 @@ const createPoint = (type, offersIds, destinationId) => ({
   price: getRandomInteger(20, 100),
 });
 
-export { createPoint };
+export { generatePoint };

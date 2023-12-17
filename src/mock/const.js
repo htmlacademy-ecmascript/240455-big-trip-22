@@ -1,4 +1,6 @@
 const PHOTOS_COUNT = 3;
+const POINTS_COUNT = 10;
+const OFFER_COUNT = 1;
 
 const TYPES = [
   'taxi',
@@ -59,4 +61,4 @@ const DESCRIPTIONS = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
-export { TYPES, OFFERS, CITIES, DESCRIPTIONS, PHOTOS_COUNT };
+export { TYPES, OFFERS, CITIES, DESCRIPTIONS, PHOTOS_COUNT, POINTS_COUNT, OFFER_COUNT };

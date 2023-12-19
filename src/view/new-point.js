@@ -1,6 +1,10 @@
-import {createElement} from '../render.js';
+import { createElement } from '../render.js';
+import { humanizeDate } from '../utils.js';
 
-function createNewPoint() {
+function createNewPoint(point, offers, destination) {
+  //const { id, type, destination, offers, dateFrom, dateTo, isFavorite, price } = point;
+
+
   return `<form class="event event--edit" action="#" method="post">
             <header class="event__header">
               <div class="event__type-wrapper">
@@ -164,8 +168,15 @@ function createNewPoint() {
 }
 
 export default class NewPoint {
+
+  constructor ({point, offers, destination}) {
+    this.point = point;
+    this.offers = offers;
+    this.destination = destination;
+  }
+
   getTemplate () {
-    return createNewPoint();
+    return createNewPoint(this.point, this.offers, this.destination);
   }
 
   getElement() {

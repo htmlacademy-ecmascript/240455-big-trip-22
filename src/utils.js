@@ -1,8 +1,12 @@
+import dayjs from 'dayjs';
+
+const DATE_FORMAT = 'D MMMM';
+
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-//Создание счетчика
+//создание счетчика
 const createIdGenerator = () => {
   let lastGenerateId = 0;
 
@@ -21,4 +25,9 @@ function getRandomInteger (min, max) {
   return Math.floor(result);
 }
 
-export { getRandomArrayElement, createIdGenerator, getRandomInteger };
+//работа с датой
+function humanizeDate (date) {
+  return date ? dayjs(date).format(DATE_FORMAT) : '';
+}
+
+export { getRandomArrayElement, createIdGenerator, getRandomInteger, humanizeDate };

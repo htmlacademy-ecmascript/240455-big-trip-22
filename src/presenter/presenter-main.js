@@ -6,24 +6,29 @@ import Event from '../view/event.js';
 import NewPoint from '../view/new-point.js';
 
 export default class PresenterMain {
-  sortingComponent = new Sorting();
-  eventsListComponent = new EventsList();
-  eventListItemComponent = new EventsListItem();
-  formComponent = new NewPoint();
+  sortingComponent = new Sorting(); //сортировка
+  eventsListComponent = new EventsList(); //ul
+  eventListItemComponent = new EventsListItem(); //li
+  formComponent = new NewPoint({point: this.points[0], offers: this.offers, destination: this.destination});
 
-  constructor ({presenterContainer}) {
+  constructor ({presenterContainer, destinationModel, offersModel, pointsModel}) {
     this.presenterContainer = presenterContainer;
+    this.destinationModel = destinationModel;
+    this.offersModel = offersModel;
+    this.pointsModel = pointsModel;
   }
 
   init() {
+    this.destination = [...this.destinationModel.get()];
+    this.offers = [...this.offersModel.get()];
+    this.points = [...this.pointsModel.get()];
     render(this.sortingComponent, this.presenterContainer); //сортировка
     render(this.eventsListComponent, this.presenterContainer); //список ul
     render(this.eventListItemComponent, this.eventsListComponent.getElement()); // пункт списка li
-    render(this.formComponent, this.eventListItemComponent.getElement());
-    for (let i = 0; i < 3; i++) {
-      render(new EventsListItem(), this.eventsListComponent.getElement());
-      render(new Event(), this.eventsListComponent.getElement().lastElementChild);
+    render(this.formComponent, this.eventListItemComponent.getElement()); //кладем форму в первый li
+    for (let i = 1; i < this.points.length; i++) {
+      render(new EventsListItem(), this.eventsListComponent.getElement()); //рендерим li
+      render(new Event({point: this.points[i], offers: this.offers, destination: this.destination}), this.eventsListComponent.getElement().lastElementChild); //рендерим point в li
     }
-    console.log(destinationModel);
   }
 }

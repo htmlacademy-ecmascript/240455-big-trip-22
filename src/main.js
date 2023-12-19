@@ -23,5 +23,3 @@ const presenterMain = new PresenterMain({
 presenterHeader.init();
 presenterMain.init();
 
-console.log(mockService);
-

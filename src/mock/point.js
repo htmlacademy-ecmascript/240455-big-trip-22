@@ -7,8 +7,8 @@ const generatePoint = (type, offersIds, destinationId) => ({
   type: type,
   offers: offersIds,
   destination: destinationId,
-  dateFrom: '25/12/23 16:00',
-  dateTo: '26/12/23 16:00',
+  dateFrom: new Date('2023-12-25, 16:00'),
+  dateTo: new Date('2023-12-27, 16:00'),
   isFavorite: getRandomInteger(0, 1),
   price: getRandomInteger(20, 100),
 });

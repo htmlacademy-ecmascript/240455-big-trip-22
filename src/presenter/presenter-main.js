@@ -21,7 +21,10 @@ export default class PresenterMain {
     this.sortingComponent = new Sorting(); //сортировка
     this.eventsListComponent = new EventsList(); //ul
     this.eventListItemComponent = new EventsListItem(); //li
-    this.formComponent = new NewPoint({point: this.points[0], offers: this.offers, destination: this.destination});
+
+    let destinationId = this.points[0].destination; //id направления
+    let destination = this.destinationModel.getById(destinationId);
+    this.formComponent = new NewPoint({point: this.points[0], offers: this.offers, destination: destination});
 
     render(this.sortingComponent, this.presenterContainer); //сортировка
     render(this.eventsListComponent, this.presenterContainer); //список ul
@@ -29,8 +32,11 @@ export default class PresenterMain {
     render(this.formComponent, this.eventListItemComponent.getElement()); //кладем форму в первый li
 
     for (let i = 1; i < this.points.length; i++) {
+      destinationId = this.points[i].destination;
+      destination = this.destinationModel.getById(destinationId);
+
       render(new EventsListItem(), this.eventsListComponent.getElement()); //рендерим li
-      render(new Event({point: this.points[i], offers: this.offers, destination: this.destination}), this.eventsListComponent.getElement().lastElementChild); //рендерим point в li
+      render(new Event({point: this.points[i], offers: this.offers, destination: destination}), this.eventsListComponent.getElement().lastElementChild); //рендерим point в li
     }
   }
 }

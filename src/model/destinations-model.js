@@ -11,6 +11,6 @@ export default class DestinationsModel {
 
   getById(id) {
     return this.destinations
-      .find((destinations) => destinations.id === id);
+      .find((destination) => destination.id === id);
   }
 }

@@ -1,4 +1,4 @@
-const PHOTOS_COUNT = 3;
+const PHOTOS_COUNT = 5;
 const POINTS_COUNT = 10;
 const OFFER_COUNT = 5;
 

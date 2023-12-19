@@ -1,11 +1,18 @@
 import { createElement } from '../render.js';
 import { humanizeDate } from '../utils.js';
 
+// const BLANK_POINT = {
+
+// }
+
 function createNewPoint(point, offers, destination) {
   const { type, dateFrom, dateTo, price } = point;
   const { name, description, photos } = destination;
   const dateFromHumanized = humanizeDate(dateFrom);
   const dateToHumanized = humanizeDate(dateTo);
+  const existPhotos = photos.length > 0
+    ? ''
+    : ' visually-hidden';
 
   return `<form class="event event--edit" action="#" method="post">
             <header class="event__header">
@@ -154,7 +161,7 @@ function createNewPoint(point, offers, destination) {
               <section class="event__section  event__section--destination">
                 <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                 <p class="event__destination-description">${name}. ${description}</p>
-                <div class="event__photos-container">
+                <div class="event__photos-container${existPhotos}">
                   <div class="event__photos-tape">
                     <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
                     <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">

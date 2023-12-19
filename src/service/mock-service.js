@@ -37,7 +37,7 @@ export default class MockService {
   generateOffers() {
     return TYPES.map((type) => ({
       type,
-      offers: Array.from({ length: getRandomInteger(1, OFFER_COUNT) }, () => generateOffer()),
+      offers: Array.from({ length: getRandomInteger(1, getRandomInteger(0, OFFER_COUNT)) }, () => generateOffer()),
     }));
   }
 
@@ -57,7 +57,7 @@ export default class MockService {
           .map((offer) => offer.id)
         : [];
 
-      generatePoint(type, offersIds, destination.id);
+      return generatePoint(type, offersIds, destination.id);
     });
   }
 }

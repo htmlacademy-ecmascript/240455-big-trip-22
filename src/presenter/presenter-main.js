@@ -24,5 +24,6 @@ export default class PresenterMain {
       render(new EventsListItem(), this.eventsListComponent.getElement());
       render(new Event(), this.eventsListComponent.getElement().lastElementChild);
     }
+    console.log(destinationModel);
   }
 }

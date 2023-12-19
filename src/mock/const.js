@@ -1,6 +1,6 @@
 const PHOTOS_COUNT = 3;
 const POINTS_COUNT = 10;
-const OFFER_COUNT = 1;
+const OFFER_COUNT = 5;
 
 const TYPES = [
   'taxi',
@@ -15,27 +15,27 @@ const TYPES = [
 ];
 
 const OFFERS = [
-  'Upgrade to a business class', //taxi
-  'Choose the radio station', //taxi
-  'Choose temperature', //taxi
-  'Infotainment system', //bus
-  'Order meal', //bus
-  'Choose seats', //bus
-  'Book a taxi at the arrival point', //train
-  'Order a breakfast', //train
-  'Wake up at a certain time', //train
-  'Choose meal', //flight
-  'Choose seats', //flight
-  'Upgrade to comfort class', //flight
-  'Choose the time of check-in', //check-in
-  'Choose the time of check-out', //check-in
-  'Add breakfast', //check-in
-  'Add luggage', //ship
-  'Business lounge', //ship
-  'With automatic transmission', //drive
-  'With air conditioning', //drive
-  'Choose live music', //restaurant
-  'Choose VIP area' //restaurant
+  'Upgrade to a business class',
+  'Choose the radio station',
+  'Choose temperature',
+  'Infotainment system',
+  'Order meal',
+  'Choose seats',
+  'Book a taxi at the arrival point',
+  'Order a breakfast',
+  'Wake up at a certain time',
+  'Choose meal',
+  'Choose seats',
+  'Upgrade to comfort class',
+  'Choose the time of check-in',
+  'Choose the time of check-out',
+  'Add breakfast',
+  'Add luggage',
+  'Business lounge',
+  'With automatic transmission',
+  'With air conditioning',
+  'Choose live music',
+  'Choose VIP area'
 ];
 
 const CITIES = [

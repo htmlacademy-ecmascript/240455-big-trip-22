@@ -2,10 +2,15 @@ import { createElement } from '../render.js';
 import { humanizeDate, ucFirst } from '../utils.js';
 import { TYPES } from '../mock/const.js';
 
-// const BLANK_POINT = {}
-// При открытии формы все поля, кроме типа точки маршрута, пусты, дополнительные опции не выбраны,
-// значение поля «Стоимость» — 0.
-// Предустановленный тип точки маршрута — «Flight».
+const BLANK_POINT = {
+  id: 1,
+  type: 'Flight',
+  offers: [],
+  destination: '',
+  dateFrom: '',
+  dateTo: '',
+  price: 0,
+};
 
 function createTypesList(types, type) {
   return types.map((element) => `
@@ -22,7 +27,7 @@ function createOffersTemplate(offers) {
         <div class="event__available-offers">
         ${offers.map((offer) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}" checked>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}">
       <label class="event__offer-label" for="event-offer-${offer.id}-1">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
@@ -85,9 +90,7 @@ function createNewPoint(point, offers, destination) {
                 </label>
                 <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationName}" list="destination-list-1">
                 <datalist id="destination-list-1">
-                  <option value="Amsterdam"></option>
-                  <option value="Geneva"></option>
-                  <option value="Chamonix"></option>
+                  <option value="${destinationName}"></option>
                 </datalist>
               </div>
 
@@ -118,8 +121,7 @@ function createNewPoint(point, offers, destination) {
 }
 
 export default class NewPoint {
-  //point = BLANK_POINT;
-  constructor ({point, offers, destination}) {
+  constructor ({point = BLANK_POINT, offers, destination}) {
     this.point = point;
     this.offers = offers;
     this.destination = destination;

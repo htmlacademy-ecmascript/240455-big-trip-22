@@ -3,11 +3,34 @@ import { humanizeDate, ucFirst } from '../utils.js';
 import { TYPES } from '../mock/const.js';
 
 // const BLANK_POINT = {}
+// При открытии формы все поля, кроме типа точки маршрута, пусты, дополнительные опции не выбраны,
+// значение поля «Стоимость» — 0.
+// Предустановленный тип точки маршрута — «Flight».
+
 function createTypesList(types, type) {
-  return types.map((element) => `<div class="event__type-item">
-                                  <input id="event-type-${element}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${element}"${element === type ? ' checked' : ''}>
-                                  <label class="event__type-label  event__type-label--${element}" for="event-type-${element}-1">${ucFirst(element)}</label>
-                                 </div>`).join('');
+  return types.map((element) => `
+          <div class="event__type-item">
+            <input id="event-type-${element}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${element}"${element === type ? ' checked' : ''}>
+            <label class="event__type-label  event__type-label--${element}" for="event-type-${element}-1">${ucFirst(element)}</label>
+          </div>`).join('');
+}
+
+function createOffersTemplate(offers) {
+  return offers.length > 0 ?
+    `<section class="event__section  event__section--offers">
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+        ${offers.map((offer) =>
+    `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}" checked>
+      <label class="event__offer-label" for="event-offer-${offer.id}-1">
+        <span class="event__offer-title">${offer.title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${offer.price}</span>
+      </label>
+    </div>`).join('')}
+      </div>
+    </section>` : '';
 }
 
 function createDestinationTemplate({ name, description, photos }) {
@@ -33,10 +56,11 @@ function createNewPoint(point, offers, destination) {
   const { type, dateFrom, dateTo, price } = point;
   const { name, description, photos } = typeof destination !== 'undefined' ? destination : '';
   const destinationName = typeof name !== 'undefined' ? name : '';
-  const destinationTemplate = typeof destination !== 'undefined' ? (createDestinationTemplate({ name, description, photos })) : '';
   const dateFromHumanized = humanizeDate(dateFrom);
   const dateToHumanized = humanizeDate(dateTo);
   const typesList = createTypesList(TYPES, type);
+  const offersTemplate = createOffersTemplate(offers);
+  const destinationTemplate = typeof destination !== 'undefined' ? (createDestinationTemplate({ name, description, photos })) : '';
 
   return `<form class="event event--edit" action="#" method="post">
             <header class="event__header">
@@ -87,56 +111,7 @@ function createNewPoint(point, offers, destination) {
               <button class="event__reset-btn" type="reset">Cancel</button>
             </header>
             <section class="event__details">
-              <section class="event__section  event__section--offers">
-                <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-                <div class="event__available-offers">
-                  <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-                    <label class="event__offer-label" for="event-offer-luggage-1">
-                      <span class="event__offer-title">Add luggage</span>
-                      &plus;&euro;&nbsp;
-                      <span class="event__offer-price">30</span>
-                    </label>
-                  </div>
-
-                  <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-                    <label class="event__offer-label" for="event-offer-comfort-1">
-                      <span class="event__offer-title">Switch to comfort class</span>
-                      &plus;&euro;&nbsp;
-                      <span class="event__offer-price">100</span>
-                    </label>
-                  </div>
-
-                  <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-                    <label class="event__offer-label" for="event-offer-meal-1">
-                      <span class="event__offer-title">Add meal</span>
-                      &plus;&euro;&nbsp;
-                      <span class="event__offer-price">15</span>
-                    </label>
-                  </div>
-
-                  <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-                    <label class="event__offer-label" for="event-offer-seats-1">
-                      <span class="event__offer-title">Choose seats</span>
-                      &plus;&euro;&nbsp;
-                      <span class="event__offer-price">5</span>
-                    </label>
-                  </div>
-
-                  <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-                    <label class="event__offer-label" for="event-offer-train-1">
-                      <span class="event__offer-title">Travel by train</span>
-                      &plus;&euro;&nbsp;
-                      <span class="event__offer-price">40</span>
-                    </label>
-                  </div>
-                </div>
-              </section>
+              ${offersTemplate}
               ${destinationTemplate}
             </section>
           </form>`;

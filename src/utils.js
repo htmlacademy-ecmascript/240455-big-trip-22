@@ -25,9 +25,16 @@ function getRandomInteger (min, max) {
   return Math.floor(result);
 }
 
-//работа с датой
+//преобразование даты в указанный формат
 function humanizeDate (date) {
   return date ? dayjs(date).format(DATE_FORMAT) : '';
 }
 
-export { getRandomArrayElement, createIdGenerator, getRandomInteger, humanizeDate };
+//написание слова с прописной буквы
+function ucFirst(str) {
+  if (!str) return str;
+
+  return str[0].toUpperCase() + str.slice(1);
+}
+
+export { getRandomArrayElement, createIdGenerator, getRandomInteger, humanizeDate, ucFirst };

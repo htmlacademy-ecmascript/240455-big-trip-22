@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const DATE_FORMAT = 'D MMMM';
+const DATE_FORMAT = 'D/MM/YY H:mm';
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];

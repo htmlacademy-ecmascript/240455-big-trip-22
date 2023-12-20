@@ -1,18 +1,23 @@
 import { createElement } from '../render.js';
 import { humanizeDate } from '../utils.js';
 
-// const BLANK_POINT = {
+// const BLANK_POINT = {}
 
-// }
+function createPhotosTemplate(photos) {
+  return photos.length > 0 ?
+    `<div class="event__photos-container">
+      <div class="event__photos-tape">
+        ${photos.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`)}
+      </div>
+    </div>` : '';
+}
 
 function createNewPoint(point, offers, destination) {
   const { type, dateFrom, dateTo, price } = point;
   const { name, description, photos } = destination;
   const dateFromHumanized = humanizeDate(dateFrom);
   const dateToHumanized = humanizeDate(dateTo);
-  const existPhotos = photos.length > 0
-    ? ''
-    : ' visually-hidden';
+  const photosTemplate = createPhotosTemplate(photos);
 
   return `<form class="event event--edit" action="#" method="post">
             <header class="event__header">
@@ -157,26 +162,17 @@ function createNewPoint(point, offers, destination) {
                   </div>
                 </div>
               </section>
-
               <section class="event__section  event__section--destination">
                 <h3 class="event__section-title  event__section-title--destination">Destination</h3>
                 <p class="event__destination-description">${name}. ${description}</p>
-                <div class="event__photos-container${existPhotos}">
-                  <div class="event__photos-tape">
-                    <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-                    <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-                    <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-                    <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-                    <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
-                  </div>
-                </div>
-              </section>
+                ${photosTemplate}
+            </section>
             </section>
           </form>`;
 }
 
 export default class NewPoint {
-
+  //point = BLANK_POINT;
   constructor ({point, offers, destination}) {
     this.point = point;
     this.offers = offers;

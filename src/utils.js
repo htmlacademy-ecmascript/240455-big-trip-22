@@ -1,6 +1,9 @@
 import dayjs from 'dayjs';
 
-const DATE_FORMAT = 'D/MM/YY H:mm';
+const DATE_FORMAT_FIRST = 'D/MM/YY H:mm';
+const DATE_FORMAT_SECOND = 'YYYY-MM-DD';
+const DATE_FORMAT_THIRD = 'MMM D';
+const TIME_FORMAT = 'HH:mm';
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -26,8 +29,8 @@ function getRandomInteger (min, max) {
 }
 
 //преобразование даты в указанный формат
-function humanizeDate (date) {
-  return date ? dayjs(date).format(DATE_FORMAT) : '';
+function humanizeDate (date, dateFormat) {
+  return date ? dayjs(date).format(dateFormat) : '';
 }
 
 //написание слова с прописной буквы
@@ -39,4 +42,4 @@ function ucFirst(str) {
   return str[0].toUpperCase() + str.slice(1);
 }
 
-export { getRandomArrayElement, createIdGenerator, getRandomInteger, humanizeDate, ucFirst };
+export { getRandomArrayElement, createIdGenerator, getRandomInteger, humanizeDate, ucFirst, DATE_FORMAT_FIRST, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, TIME_FORMAT };

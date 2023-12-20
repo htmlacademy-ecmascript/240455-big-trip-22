@@ -38,7 +38,6 @@ export default class PresenterMain {
       destination = this.destinationModel.getById(destinationId);
       type = this.points[i].type;
       offers = this.offersModel.getByType(type);
-
       render(new EventsListItem(), this.eventsListComponent.getElement()); //рендерим li
       render(new Event({point: this.points[i], offers: offers, destination: destination}), this.eventsListComponent.getElement().lastElementChild); //рендерим point в li
     }

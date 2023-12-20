@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { humanizeDate, ucFirst } from '../utils.js';
+import { humanizeDate, ucFirst, DATE_FORMAT_FIRST } from '../utils.js';
 import { TYPES } from '../mock/const.js';
 
 const BLANK_POINT = {
@@ -61,8 +61,8 @@ function createNewPoint(point, offers, destination) {
   const { type, dateFrom, dateTo, price } = point;
   const { name, description, photos } = typeof destination !== 'undefined' ? destination : '';
   const destinationName = typeof name !== 'undefined' ? name : '';
-  const dateFromHumanized = humanizeDate(dateFrom);
-  const dateToHumanized = humanizeDate(dateTo);
+  const dateFromHumanized = humanizeDate(dateFrom, DATE_FORMAT_FIRST);
+  const dateToHumanized = humanizeDate(dateTo, DATE_FORMAT_FIRST);
   const typesList = createTypesList(TYPES, type);
   const offersTemplate = createOffersTemplate(offers);
   const destinationTemplate = typeof destination !== 'undefined' ? (createDestinationTemplate({ name, description, photos })) : '';

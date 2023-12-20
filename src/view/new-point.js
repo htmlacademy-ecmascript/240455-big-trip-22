@@ -3,6 +3,16 @@ import { humanizeDate } from '../utils.js';
 
 // const BLANK_POINT = {}
 
+function createDestinationTemplate({ name, description, photos }) {
+  const photosTemplate = createPhotosTemplate(photos);
+
+  return `<section class="event__section  event__section--destination">
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    <p class="event__destination-description">${name}. ${description}</p>
+    ${photosTemplate}
+  </section>`;
+}
+
 function createPhotosTemplate(photos) {
   return photos.length > 0 ?
     `<div class="event__photos-container">
@@ -14,10 +24,11 @@ function createPhotosTemplate(photos) {
 
 function createNewPoint(point, offers, destination) {
   const { type, dateFrom, dateTo, price } = point;
-  const { name, description, photos } = destination;
+  const { name, description, photos } = typeof destination !== 'undefined' ? destination : '';
+  const destinationName = typeof name !== 'undefined' ? name : '';
+  const destinationTemplate = typeof destination !== 'undefined' ? (createDestinationTemplate({ name, description, photos })) : '';
   const dateFromHumanized = humanizeDate(dateFrom);
   const dateToHumanized = humanizeDate(dateTo);
-  const photosTemplate = createPhotosTemplate(photos);
 
   return `<form class="event event--edit" action="#" method="post">
             <header class="event__header">
@@ -84,7 +95,7 @@ function createNewPoint(point, offers, destination) {
                 <label class="event__label  event__type-output" for="event-destination-1">
                   ${type}
                 </label>
-                <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name}" list="destination-list-1">
+                <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationName}" list="destination-list-1">
                 <datalist id="destination-list-1">
                   <option value="Amsterdam"></option>
                   <option value="Geneva"></option>
@@ -162,11 +173,7 @@ function createNewPoint(point, offers, destination) {
                   </div>
                 </div>
               </section>
-              <section class="event__section  event__section--destination">
-                <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                <p class="event__destination-description">${name}. ${description}</p>
-                ${photosTemplate}
-            </section>
+              ${destinationTemplate}
             </section>
           </form>`;
 }

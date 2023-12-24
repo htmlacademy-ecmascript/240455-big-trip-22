@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDate, ucFirst, DATE_FORMAT_FIRST } from '../utils.js';
 import { TYPES } from '../mock/const.js';
 
@@ -120,26 +120,18 @@ function createNewPoint(point, offers, destination) {
           </form>`;
 }
 
-export default class NewPoint {
+export default class NewPoint extends AbstractView {
+  #point;
+  #offers;
+  #destination;
   constructor ({point = BLANK_POINT, offers, destination}) {
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
   }
 
-  getTemplate () {
-    return createNewPoint(this.point, this.offers, this.destination);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template () {
+    return createNewPoint(this.#point, this.#offers, this.#destination);
   }
 }

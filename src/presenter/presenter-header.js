@@ -1,4 +1,4 @@
-import {render, RenderPosition} from '../render.js';
+import { render, RenderPosition } from '../framework/render.js';
 import Filters from '../view/filters.js';
 import TripInfo from '../view/trip-info.js';
 import TripInfoContent from '../view/trip-info-content.js';
@@ -19,8 +19,8 @@ export default class PresenterHeader {
 
   init() {
     render(this.tripInfoComponent, this.siteTripMainContainer, RenderPosition.AFTERBEGIN); //инфо
-    render(this.tripInfoMainComponent, this.tripInfoComponent.getElement()); //основная инфо
-    render(this.tripInfoCostComponent, this.tripInfoComponent.getElement()); //цена
+    render(this.tripInfoMainComponent, this.tripInfoComponent.element); //основная инфо
+    render(this.tripInfoCostComponent, this.tripInfoComponent.element); //цена
     render(this.filtersComponent, this.siteFiltersContainer); //фильтры
   }
 }

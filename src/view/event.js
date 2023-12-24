@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDate, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, TIME_FORMAT, ucFirst } from '../utils.js';
 
 function createOffersTemplate(offers) {
@@ -55,26 +55,18 @@ function createEvent(point, offers, destination) {
           </div>`;
 }
 
-export default class Event {
+export default class Event extends AbstractView {
+  #point;
+  #offers;
+  #destination;
   constructor ({point, offers, destination}) {
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
   }
 
-  getTemplate () {
-    return createEvent(this.point, this.offers, this.destination);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template () {
+    return createEvent(this.#point, this.#offers, this.#destination);
   }
 }

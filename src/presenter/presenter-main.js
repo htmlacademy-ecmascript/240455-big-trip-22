@@ -1,4 +1,4 @@
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import EventsListItem from '../view/events-list-item.js';
@@ -30,16 +30,16 @@ export default class PresenterMain {
 
     render(this.sortingComponent, this.presenterContainer); //сортировка
     render(this.eventsListComponent, this.presenterContainer); //список ul
-    render(this.eventListItemComponent, this.eventsListComponent.getElement()); // пункт списка li
-    render(this.formComponent, this.eventListItemComponent.getElement()); //кладем форму в первый li
+    render(this.eventListItemComponent, this.eventsListComponent.element); // пункт списка li
+    render(this.formComponent, this.eventListItemComponent.element); //кладем форму в первый li
 
     for (let i = 1; i < this.points.length; i++) {
       destinationId = this.points[i].destination;
       destination = this.destinationModel.getById(destinationId);
       type = this.points[i].type;
       offers = this.offersModel.getByType(type);
-      render(new EventsListItem(), this.eventsListComponent.getElement()); //рендерим li
-      render(new Event({point: this.points[i], offers: offers, destination: destination}), this.eventsListComponent.getElement().lastElementChild); //рендерим point в li
+      render(new EventsListItem(), this.eventsListComponent.element); //рендерим li
+      render(new Event({point: this.points[i], offers: offers, destination: destination}), this.eventsListComponent.element.lastElementChild); //рендерим point в li
     }
   }
 }

@@ -3,6 +3,7 @@ import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import EventsListItem from '../view/events-list-item.js';
 import Event from '../view/event.js';
+import NewPoint from '../view/new-point.js';
 
 export default class PresenterMain {
   #presenterContainer = null;
@@ -39,5 +40,6 @@ export default class PresenterMain {
     const offers = this.#offersModel.getByType(type);
     render(new EventsListItem(), this.#eventsListComponent.element); //рендерим li
     render(new Event({point: point, offers, destination}), this.#eventsListComponent.element.lastElementChild); //рендерим point в li
+    render(new NewPoint({point: point, offers, destination}), this.#eventsListComponent.element.lastElementChild); //рендерим форму в li
   }
 }

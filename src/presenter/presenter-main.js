@@ -28,12 +28,16 @@ export default class PresenterMain {
     render(this.#eventsListComponent, this.#presenterContainer); //список ul
 
     for (let i = 1; i < this.#points.length; i++) {
-      const destinationId = this.#points[i].destination;
-      const destination = this.#destinationModel.getById(destinationId);
-      const type = this.#points[i].type;
-      const offers = this.#offersModel.getByType(type);
-      render(new EventsListItem(), this.#eventsListComponent.element); //рендерим li
-      render(new Event({point: this.#points[i], offers, destination}), this.#eventsListComponent.element.lastElementChild); //рендерим point в li
+      this.#renderPoint(this.#points[i]);
     }
+  }
+
+  #renderPoint(point) {
+    const destinationId = point.destination;
+    const destination = this.#destinationModel.getById(destinationId);
+    const type = point.type;
+    const offers = this.#offersModel.getByType(type);
+    render(new EventsListItem(), this.#eventsListComponent.element); //рендерим li
+    render(new Event({point: point, offers, destination}), this.#eventsListComponent.element.lastElementChild); //рендерим point в li
   }
 }

@@ -1,9 +1,10 @@
-import { render } from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import EventsListItem from '../view/events-list-item.js';
 import Event from '../view/event.js';
-import NewPoint from '../view/new-point.js';
+import EditablePoint from '../view/editable-point.js';
+import ButtonRollUp from '../view/button-rollup.js';
 
 export default class PresenterMain {
   #presenterContainer = null;
@@ -11,12 +12,19 @@ export default class PresenterMain {
   #offersModel = null;
   #pointsModel = null;
   #points = null;
-
   #sortingComponent = new Sorting(); //сортировка
   #eventsListComponent = new EventsList(); //список ul
+  #list = null;
+  #listItem = null;
+  #event = null;
+  #form = null;
+  #arrowShowingForm = null;
+  #arrowClosingForm = null;
+  #formHeader = null;
 
-  constructor ({presenterContainer, destinationModel, offersModel, pointsModel}) {
+  constructor ({presenterContainer, formHeader, destinationModel, offersModel, pointsModel}) {
     this.#presenterContainer = presenterContainer;
+    this.#formHeader = formHeader;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
     this.#pointsModel = pointsModel;
@@ -28,7 +36,7 @@ export default class PresenterMain {
     render(this.#sortingComponent, this.#presenterContainer); //сортировка
     render(this.#eventsListComponent, this.#presenterContainer); //список ul
 
-    for (let i = 1; i < this.#points.length; i++) {
+    for (let i = 0; i < this.#points.length; i++) {
       this.#renderPoint(this.#points[i]);
     }
   }
@@ -38,8 +46,26 @@ export default class PresenterMain {
     const destination = this.#destinationModel.getById(destinationId);
     const type = point.type;
     const offers = this.#offersModel.getByType(type);
-    render(new EventsListItem(), this.#eventsListComponent.element); //рендерим li
-    render(new Event({point: point, offers, destination}), this.#eventsListComponent.element.lastElementChild); //рендерим point в li
-    render(new NewPoint({point: point, offers, destination}), this.#eventsListComponent.element.lastElementChild); //рендерим форму в li
+
+    this.#list = this.#eventsListComponent.element;
+    this.#listItem = new EventsListItem();
+    this.#event = new Event({point: point, offers, destination});
+    this.#form = new EditablePoint({point: point, offers, destination});
+    this.#formHeader = this.#form.element.querySelector('.event__header');
+    this.#arrowShowingForm = new ButtonRollUp({onClick: this.#handleShowFormButtonClick, form: this.#form, event: this.#event});
+    this.#arrowClosingForm = new ButtonRollUp({onClick: this.#handleCloseFormButtonClick, form: this.#form, event: this.#event});
+
+    render(this.#listItem, this.#list); //рендерим li
+    render(this.#event, this.#listItem.element); //рендерим точку в li
+    render(this.#arrowShowingForm, this.#event.element); //рендерим стрелку в точке
+    render(this.#arrowClosingForm, this.#formHeader); //рендерим стрелку в форме
   }
+
+  #handleShowFormButtonClick = (form, event) => {
+    replace(form, event);
+  };
+
+  #handleCloseFormButtonClick = (form, event) => {
+    replace(event, form);
+  };
 }

@@ -5,6 +5,7 @@ import EventsListItem from '../view/events-list-item.js';
 import Event from '../view/event.js';
 import EditablePoint from '../view/editable-point.js';
 import ButtonRollUp from '../view/button-rollup.js';
+import { isEscapeKey } from '../utils.js';
 
 export default class PresenterMain {
   #presenterContainer = null;
@@ -62,19 +63,29 @@ export default class PresenterMain {
     render(this.#arrowClosingForm, this.#formHeader); //рендерим стрелку в форме
   }
 
-  #handleShowFormButtonClick = (form, event) => {
+  #onDocumentKeydown = (evt, form, point) => {
+    if (isEscapeKey(evt)) {
+      this.#handleCloseFormButtonClick(form, point);
+    }
+  };
+
+  #handleShowFormButtonClick = (form, point) => {
     if (this.#pairArray !== null) {
       replace(this.#pairArray[1], this.#pairArray[0]);
     }
-    replace(form, event);
+    replace(form, point);
 
-    this.#pairArray = Array.of(form, event);
+    this.#pairArray = Array.of(form, point);
+
+    document.addEventListener('keydown', this.#onDocumentKeydown(form, point));
   };
 
-  #handleCloseFormButtonClick = (form, event) => {
+  #handleCloseFormButtonClick = (form, point) => {
     if (this.#pairArray !== null) {
       this.#pairArray = null;
     }
-    replace(event, form);
+    replace(point, form);
+
+    document.removeEventListener('keydown', this.#onDocumentKeydown);
   };
 }

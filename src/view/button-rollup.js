@@ -10,6 +10,7 @@ export default class ButtonRollUp extends AbstractView {
   #handleClick = null;
   #form = null;
   #event = null;
+
   constructor ({onClick, form, event}) {
     super();
     this.#handleClick = onClick;

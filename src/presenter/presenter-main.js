@@ -21,6 +21,7 @@ export default class PresenterMain {
   #arrowShowingForm = null;
   #arrowClosingForm = null;
   #formHeader = null;
+  #pairArray = null;
 
   constructor ({presenterContainer, formHeader, destinationModel, offersModel, pointsModel}) {
     this.#presenterContainer = presenterContainer;
@@ -62,10 +63,18 @@ export default class PresenterMain {
   }
 
   #handleShowFormButtonClick = (form, event) => {
+    if (this.#pairArray !== null) {
+      replace(this.#pairArray[1], this.#pairArray[0]);
+    }
     replace(form, event);
+
+    this.#pairArray = Array.of(form, event);
   };
 
   #handleCloseFormButtonClick = (form, event) => {
+    if (this.#pairArray !== null) {
+      this.#pairArray = null;
+    }
     replace(event, form);
   };
 }

@@ -112,6 +112,9 @@ function createEditablePoint(point, offers, destination) {
 
               <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
               <button class="event__reset-btn" type="reset">Delete</button>
+              <button class="event__rollup-btn" type="button">
+                <span class="visually-hidden">Open event</span>
+              </button>
             </header>
             <section class="event__details">
               ${offersTemplate}
@@ -124,14 +127,31 @@ export default class EditablePoint extends AbstractView {
   #point;
   #offers;
   #destination;
-  constructor ({point = BLANK_POINT, offers, destination}) {
+  #handleClick = null;
+  #handleFormSubmit = null;
+
+  constructor ({onClick, onFormSubmit, point = BLANK_POINT, offers, destination}) {
     super();
     this.#point = point;
     this.#offers = offers;
     this.#destination = destination;
+    this.#handleClick = onClick;
+    this.#handleFormSubmit = onFormSubmit;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
+    this.element.addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template () {
     return createEditablePoint(this.#point, this.#offers, this.#destination);
   }
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }

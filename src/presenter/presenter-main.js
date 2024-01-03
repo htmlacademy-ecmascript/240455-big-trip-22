@@ -4,7 +4,6 @@ import EventsList from '../view/events-list.js';
 import EventsListItem from '../view/events-list-item.js';
 import Event from '../view/event.js';
 import EditablePoint from '../view/editable-point.js';
-import ButtonRollUp from '../view/button-rollup.js';
 import { isEscapeKey } from '../utils.js';
 
 export default class PresenterMain {
@@ -48,44 +47,36 @@ export default class PresenterMain {
     const destination = this.#destinationModel.getById(destinationId);
     const type = point.type;
     const offers = this.#offersModel.getByType(type);
+    const list = this.#eventsListComponent.element;
+    const listItem = new EventsListItem();
+    const form = new EditablePoint({
+      point,
+      offers,
+      destination,
+      onClick: () => {
+        if (this.#pairArray !== null) {
+          this.#pairArray = null;
+        }
+        replace(event, form);
+      },
+      //onFormSubmit: this.#handleCloseFormButtonClick
+    });
+    const event = new Event({
+      point,
+      offers,
+      destination,
+      onClick: () => {
+        if (this.#pairArray !== null) {
+          replace(this.#pairArray[1], this.#pairArray[0]);
+        }
+        replace(form, event);
 
-    this.#list = this.#eventsListComponent.element;
-    this.#listItem = new EventsListItem();
-    this.#event = new Event({point: point, offers, destination});
-    this.#form = new EditablePoint({point: point, offers, destination});
-    this.#formHeader = this.#form.element.querySelector('.event__header');
-    this.#arrowShowingForm = new ButtonRollUp({onClick: this.#handleShowFormButtonClick, form: this.#form, event: this.#event});
-    this.#arrowClosingForm = new ButtonRollUp({onClick: this.#handleCloseFormButtonClick, form: this.#form, event: this.#event});
+        this.#pairArray = Array.of(form, event);
 
-    render(this.#listItem, this.#list); //рендерим li
-    render(this.#event, this.#listItem.element); //рендерим точку в li
-    render(this.#arrowShowingForm, this.#event.element); //рендерим стрелку в точке
-    render(this.#arrowClosingForm, this.#formHeader); //рендерим стрелку в форме
+        //document.addEventListener('keydown', this.#onDocumentKeydown(form, point));
+      }
+    });
+    render(listItem, list); //рендерим li
+    render(event, listItem.element); //рендерим точку в li
   }
-
-  #onDocumentKeydown = (evt, form, point) => {
-    if (isEscapeKey(evt)) {
-      this.#handleCloseFormButtonClick(form, point);
-    }
-  };
-
-  #handleShowFormButtonClick = (form, point) => {
-    if (this.#pairArray !== null) {
-      replace(this.#pairArray[1], this.#pairArray[0]);
-    }
-    replace(form, point);
-
-    this.#pairArray = Array.of(form, point);
-
-    document.addEventListener('keydown', this.#onDocumentKeydown(form, point));
-  };
-
-  #handleCloseFormButtonClick = (form, point) => {
-    if (this.#pairArray !== null) {
-      this.#pairArray = null;
-    }
-    replace(point, form);
-
-    document.removeEventListener('keydown', this.#onDocumentKeydown);
-  };
 }

@@ -14,18 +14,10 @@ export default class PresenterMain {
   #points = null;
   #sortingComponent = new Sorting(); //сортировка
   #eventsListComponent = new EventsList(); //список ul
-  #list = null;
-  #listItem = null;
-  #event = null;
-  #form = null;
-  #arrowShowingForm = null;
-  #arrowClosingForm = null;
-  #formHeader = null;
-  #pairArray = null;
+  //#pairArray = null;
 
-  constructor ({presenterContainer, formHeader, destinationModel, offersModel, pointsModel}) {
+  constructor ({presenterContainer, destinationModel, offersModel, pointsModel}) {
     this.#presenterContainer = presenterContainer;
-    this.#formHeader = formHeader;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
     this.#pointsModel = pointsModel;
@@ -43,6 +35,16 @@ export default class PresenterMain {
   }
 
   #renderPoint(point) {
+    const escKeyDownHandler = (evt) => {
+      if (isEscapeKey) {
+        evt.preventDefault();
+        // if (this.#pairArray !== null) {
+        //   this.#pairArray = null;
+        // }
+        replaceFormToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
     const destinationId = point.destination;
     const destination = this.#destinationModel.getById(destinationId);
     const type = point.type;
@@ -54,28 +56,44 @@ export default class PresenterMain {
       offers,
       destination,
       onClick: () => {
-        if (this.#pairArray !== null) {
-          this.#pairArray = null;
-        }
-        replace(event, form);
+        // if (this.#pairArray !== null) {
+        //   this.#pairArray = null;
+        // }
+        replaceFormToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
       },
-      //onFormSubmit: this.#handleCloseFormButtonClick
+      onFormSubmit: () => {
+        // if (this.#pairArray !== null) {
+        //   this.#pairArray = null;
+        // }
+        replaceFormToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      },
     });
     const event = new Event({
       point,
       offers,
       destination,
       onClick: () => {
-        if (this.#pairArray !== null) {
-          replace(this.#pairArray[1], this.#pairArray[0]);
-        }
-        replace(form, event);
+        // if (this.#pairArray !== null) {
+        //   replace(this.#pairArray[1], this.#pairArray[0]);
+        // }
+        replaceEventToForm();
 
-        this.#pairArray = Array.of(form, event);
+        // this.#pairArray = Array.of(form, event);
 
-        //document.addEventListener('keydown', this.#onDocumentKeydown(form, point));
+        document.addEventListener('keydown', escKeyDownHandler);
       }
     });
+
+    function replaceFormToEvent() {
+      replace(event, form);
+    }
+
+    function replaceEventToForm() {
+      replace(form, event);
+    }
+
     render(listItem, list); //рендерим li
     render(event, listItem.element); //рендерим точку в li
   }

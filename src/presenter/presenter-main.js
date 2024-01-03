@@ -14,7 +14,6 @@ export default class PresenterMain {
   #points = null;
   #sortingComponent = new Sorting(); //сортировка
   #eventsListComponent = new EventsList(); //список ul
-  //#pairArray = null;
 
   constructor ({presenterContainer, destinationModel, offersModel, pointsModel}) {
     this.#presenterContainer = presenterContainer;
@@ -38,9 +37,6 @@ export default class PresenterMain {
     const escKeyDownHandler = (evt) => {
       if (isEscapeKey) {
         evt.preventDefault();
-        // if (this.#pairArray !== null) {
-        //   this.#pairArray = null;
-        // }
         replaceFormToEvent();
         document.removeEventListener('keydown', escKeyDownHandler);
       }
@@ -56,16 +52,10 @@ export default class PresenterMain {
       offers,
       destination,
       onClick: () => {
-        // if (this.#pairArray !== null) {
-        //   this.#pairArray = null;
-        // }
         replaceFormToEvent();
         document.removeEventListener('keydown', escKeyDownHandler);
       },
       onFormSubmit: () => {
-        // if (this.#pairArray !== null) {
-        //   this.#pairArray = null;
-        // }
         replaceFormToEvent();
         document.removeEventListener('keydown', escKeyDownHandler);
       },
@@ -75,13 +65,7 @@ export default class PresenterMain {
       offers,
       destination,
       onClick: () => {
-        // if (this.#pairArray !== null) {
-        //   replace(this.#pairArray[1], this.#pairArray[0]);
-        // }
         replaceEventToForm();
-
-        // this.#pairArray = Array.of(form, event);
-
         document.addEventListener('keydown', escKeyDownHandler);
       }
     });

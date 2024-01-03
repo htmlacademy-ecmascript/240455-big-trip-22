@@ -42,4 +42,7 @@ function ucFirst(str) {
   return str[0].toUpperCase() + str.slice(1);
 }
 
-export { getRandomArrayElement, createIdGenerator, getRandomInteger, humanizeDate, ucFirst, DATE_FORMAT_FIRST, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, TIME_FORMAT };
+//проверка нажатия клавиши Esc
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export { getRandomArrayElement, createIdGenerator, getRandomInteger, humanizeDate, ucFirst, DATE_FORMAT_FIRST, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, TIME_FORMAT, isEscapeKey };

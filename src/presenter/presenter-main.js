@@ -4,6 +4,7 @@ import EventsList from '../view/events-list.js';
 import EventsListItem from '../view/events-list-item.js';
 import Event from '../view/event.js';
 import EditablePoint from '../view/editable-point.js';
+import NoEvents from '../view/no-events.js';
 import { isEscapeKey } from '../utils.js';
 
 export default class PresenterMain {
@@ -14,6 +15,7 @@ export default class PresenterMain {
   #points = null;
   #sortingComponent = new Sorting(); //сортировка
   #eventsListComponent = new EventsList(); //список ul
+  #noEventsComponent = new NoEvents(); //список ul
 
   constructor ({presenterContainer, destinationModel, offersModel, pointsModel}) {
     this.#presenterContainer = presenterContainer;
@@ -24,6 +26,14 @@ export default class PresenterMain {
 
   init() {
     this.#points = [...this.#pointsModel.points];
+    this.#renderMain();
+  }
+
+  #renderMain() {
+    if (this.#points.length < 1) {
+      render(this.#noEventsComponent, this.#presenterContainer); //нет точек маршрута
+      return;
+    }
 
     render(this.#sortingComponent, this.#presenterContainer); //сортировка
     render(this.#eventsListComponent, this.#presenterContainer); //список ul

@@ -5,7 +5,7 @@ import EventsListItem from '../view/events-list-item.js';
 import Event from '../view/event.js';
 import EditablePoint from '../view/editable-point.js';
 import NoEvents from '../view/no-events.js';
-import { isEscapeKey } from '../utils.js';
+import { isEscapeKey } from '../utils/utils.js';
 
 export default class PresenterMain {
   #presenterContainer = null;
@@ -15,7 +15,7 @@ export default class PresenterMain {
   #points = null;
   #sortingComponent = new Sorting(); //сортировка
   #eventsListComponent = new EventsList(); //список ul
-  #noEventsComponent = new NoEvents(); //список ul
+  #noEventsComponent = new NoEvents();
 
   constructor ({presenterContainer, destinationModel, offersModel, pointsModel}) {
     this.#presenterContainer = presenterContainer;

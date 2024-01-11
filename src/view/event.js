@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeDate, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, TIME_FORMAT, ucFirst } from '../utils.js';
+import { ucFirst } from '../utils/utils.js';
+import { humanizeDate, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, DATE_FORMAT_FOURTH, TIME_FORMAT } from '../utils/event.js';
 
 function createOffersTemplate(offers) {
   return offers.length > 0 ?
@@ -21,6 +22,8 @@ function createEvent(point, offers, destination) {
   const dateFromHumanizedAttr = humanizeDate(dateFrom, DATE_FORMAT_SECOND);
   const timeFromHumanized = humanizeDate(dateFrom, TIME_FORMAT);
   const timeToHumanized = humanizeDate(dateTo, TIME_FORMAT);
+  const timeFromHumanizedAttr = humanizeDate(dateFrom, DATE_FORMAT_FOURTH);
+  const timeToHumanizedAttr = humanizeDate(dateTo, DATE_FORMAT_FOURTH);
   const favorite = isFavorite ? ' event__favorite-btn--active' : '';
   const pointOffers = offers.filter((offer) => point.offers.includes(offer.id));
   const offersTemplate = createOffersTemplate(pointOffers);
@@ -33,9 +36,9 @@ function createEvent(point, offers, destination) {
             <h3 class="event__title">${ucFirst(type)} ${name}</h3>
             <div class="event__schedule">
               <p class="event__time">
-                <time class="event__start-time" datetime="2019-03-18T10:30">${timeFromHumanized}</time>
+                <time class="event__start-time" datetime="${timeFromHumanizedAttr}">${timeFromHumanized}</time>
                 &mdash;
-                <time class="event__end-time" datetime="2019-03-18T11:00">${timeToHumanized}</time>
+                <time class="event__end-time" datetime="${timeToHumanizedAttr}">${timeToHumanized}</time>
               </p>
               <p class="event__duration">30M</p>
             </div>

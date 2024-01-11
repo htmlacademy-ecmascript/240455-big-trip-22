@@ -61,4 +61,14 @@ const DESCRIPTIONS = [
   'In rutrum ac purus sit amet tempus.',
 ];
 
-export { TYPES, OFFERS, CITIES, DESCRIPTIONS, PHOTOS_COUNT, POINTS_COUNT, OFFER_COUNT };
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price',
+};
+
+export { TYPES, OFFERS, CITIES, DESCRIPTIONS, PHOTOS_COUNT, POINTS_COUNT, OFFER_COUNT, FilterType };

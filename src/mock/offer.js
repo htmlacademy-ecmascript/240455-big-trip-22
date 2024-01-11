@@ -1,5 +1,5 @@
 import { OFFERS } from './const.js';
-import { getRandomArrayElement, createIdGenerator, getRandomInteger } from '../utils.js';
+import { getRandomArrayElement, createIdGenerator, getRandomInteger } from '../utils/utils.js';
 
 const generateOfferId = createIdGenerator();
 

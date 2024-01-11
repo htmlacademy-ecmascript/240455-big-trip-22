@@ -1,10 +1,4 @@
-import dayjs from 'dayjs';
-
-const DATE_FORMAT_FIRST = 'D/MM/YY H:mm';
-const DATE_FORMAT_SECOND = 'YYYY-MM-DD';
-const DATE_FORMAT_THIRD = 'MMM D';
-const TIME_FORMAT = 'HH:mm';
-
+//получение случайного элемента массива
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
@@ -28,10 +22,6 @@ function getRandomInteger (min, max) {
   return Math.floor(result);
 }
 
-//преобразование даты в указанный формат
-function humanizeDate (date, dateFormat) {
-  return date ? dayjs(date).format(dateFormat) : '';
-}
 
 //написание слова с прописной буквы
 function ucFirst(str) {
@@ -45,4 +35,4 @@ function ucFirst(str) {
 //проверка нажатия клавиши Esc
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export { getRandomArrayElement, createIdGenerator, getRandomInteger, humanizeDate, ucFirst, DATE_FORMAT_FIRST, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, TIME_FORMAT, isEscapeKey };
+export { getRandomArrayElement, createIdGenerator, getRandomInteger, ucFirst, isEscapeKey };

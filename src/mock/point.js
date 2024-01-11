@@ -1,4 +1,4 @@
-import { createIdGenerator, getRandomInteger } from '../utils/utils.js';
+import { createIdGenerator, getRandomInteger } from '../utils/common.js';
 
 const generatePointId = createIdGenerator();
 

@@ -5,7 +5,7 @@ import EventsListItem from '../view/events-list-item.js';
 import Event from '../view/event.js';
 import EditablePoint from '../view/editable-point.js';
 import NoEvents from '../view/no-events.js';
-import { isEscapeKey } from '../utils/utils.js';
+import { isEscapeKey } from '../utils/common.js';
 
 export default class PresenterMain {
   #presenterContainer = null;

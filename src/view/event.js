@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { ucFirst } from '../utils/utils.js';
+import { ucFirst } from '../utils/common.js';
 import { humanizeDate, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, DATE_FORMAT_FOURTH, TIME_FORMAT } from '../utils/event.js';
 
 function createOffersTemplate(offers) {

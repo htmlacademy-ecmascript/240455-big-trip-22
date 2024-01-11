@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+dayjs.extend(isBetween);
 
 const DATE_FORMAT_FIRST = 'D/MM/YY H:mm';
 const DATE_FORMAT_SECOND = 'YYYY-MM-DD';
@@ -12,15 +14,16 @@ function humanizeDate (date, dateFormat) {
 }
 
 function isEventExpired(date) {
-  return date && dayjs().isAfter(date, 'D');
+  return dayjs().isAfter(dayjs(date));
 }
 
 function isEventFuture(date) {
-  return date && dayjs().isBefore(date, 'D');
+  return dayjs().isBefore(dayjs(date));
 }
 
-function isEventToday(date) {
-  return date && dayjs(date).isSame(dayjs(), 'D');
+function isEventPresent(dateFrom, dateTo) {
+  //return dayjs().isBetween(dayjs(dateFrom), dayjs(dateTo), 'day', '[]');
+  return dayjs().isBetween(dateFrom, dateTo, 'day', '[]');
 }
 
-export {humanizeDate, isEventExpired, isEventFuture, isEventToday, DATE_FORMAT_FIRST, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, DATE_FORMAT_FOURTH, TIME_FORMAT };
+export {humanizeDate, isEventExpired, isEventFuture, isEventPresent, DATE_FORMAT_FIRST, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, DATE_FORMAT_FOURTH, TIME_FORMAT };

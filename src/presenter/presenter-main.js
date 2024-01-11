@@ -45,7 +45,7 @@ export default class PresenterMain {
 
   #renderPoint(point) {
     const escKeyDownHandler = (evt) => {
-      if (isEscapeKey) {
+      if (isEscapeKey(evt)) {
         evt.preventDefault();
         replaceFormToEvent();
         document.removeEventListener('keydown', escKeyDownHandler);

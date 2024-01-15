@@ -11,7 +11,7 @@ const offersModel = new OffersModel(mockService);
 const pointsModel = new PointsModel(mockService);
 const siteTripEventsContainer = document.querySelector('.trip-events');
 
-const presenterHeader = new PresenterHeader();
+const presenterHeader = new PresenterHeader({pointsModel});
 const presenterMain = new PresenterMain({
   presenterContainer: siteTripEventsContainer,
   destinationModel,

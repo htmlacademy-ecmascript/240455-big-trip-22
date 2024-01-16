@@ -26,18 +26,16 @@ export default class PresenterMain {
     this.#renderMain();
   }
 
-  #renderMain() {
-    if (this.#points.length < 1) {
-      render(this.#noEventsComponent, this.#presenterContainer); //нет точек маршрута
-      return;
-    }
-
+  #renderSort() {
     render(this.#sortingComponent, this.#presenterContainer); //сортировка
-    render(this.#eventsListComponent, this.#presenterContainer); //список ul
+  }
 
-    for (let i = 0; i < this.#points.length; i++) {
-      this.#renderPoint(this.#points[i]);
-    }
+  #renderList() {
+    render(this.#eventsListComponent, this.#presenterContainer); //список ul
+  }
+
+  #renderNoPoints() {
+    render(this.#noEventsComponent, this.#presenterContainer); //нет точек маршрута
   }
 
   #renderPoint(point) {
@@ -48,5 +46,19 @@ export default class PresenterMain {
     });
 
     presenterPoint.init(point);
+  }
+
+  #renderMain() {
+    if (this.#points.length < 1) {
+      this.#renderNoPoints();
+      return;
+    }
+
+    this.#renderSort();
+    this.#renderList();
+
+    for (let i = 0; i < this.#points.length; i++) {
+      this.#renderPoint(this.#points[i]);
+    }
   }
 }

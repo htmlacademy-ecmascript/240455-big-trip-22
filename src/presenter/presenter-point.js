@@ -9,6 +9,9 @@ export default class PresenterPoint {
   #offersModel = null;
   #eventsListComponent = null;
 
+  //Передайте в презентер точки маршрута колбэк, который нужно вызвать перед тем,
+  //как сменить точку на форму редактирования.
+
   constructor({destinationModel, offersModel, eventsListComponent}) {
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;

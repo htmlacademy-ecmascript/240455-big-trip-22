@@ -42,7 +42,7 @@ export default class PresenterMain {
     const presenterPoint = new PresenterPoint({
       destinationModel: this.#destinationModel,
       offersModel: this.#offersModel,
-      eventsListComponent: this.#eventsListComponent,
+      eventsListComponent: this.#eventsListComponent, //список ul
     });
 
     presenterPoint.init(point);

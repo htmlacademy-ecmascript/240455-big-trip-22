@@ -1,10 +1,9 @@
-import { render, replace } from '../framework/render.js';
+import { render, replace, remove } from '../framework/render.js';
 import { isEscapeKey } from '../utils/common.js';
 import EventsListItem from '../view/events-list-item.js';
 import EditablePoint from '../view/editable-point.js';
 import Event from '../view/event.js';
-//Передайте в презентер точки маршрута колбэк, который нужно вызвать перед тем,
-//как сменить точку на форму редактирования.
+
 export default class PresenterPoint {
   #destinationModel = null;
   #offersModel = null;
@@ -31,6 +30,10 @@ export default class PresenterPoint {
 
   init(point) {
     this.#point = point;
+
+    const prevPointComponent = this.#pointComponent;
+    const prevPointEditComponent = this.#pointEditComponent;
+
     this.#offers = this.#offersModel.getByType(this.#point.type);
     this.#destination = this.#destinationModel.getById(this.#point.destination);
 
@@ -38,7 +41,7 @@ export default class PresenterPoint {
     this.#pointComponent = new Event({
       point: this.#point,
       offers: this.#offers,
-      destination:  this.#destination,
+      destination: this.#destination,
       onClick: this.#handleEditClick,
     });
 
@@ -52,8 +55,30 @@ export default class PresenterPoint {
 
     this.#renderListItem(); //рендерим li
 
-    render(this.#pointComponent, this.#listItem.element); //рендерим точку в li
+    if (prevPointComponent === null || prevPointEditComponent === null) {
+      render(this.#pointComponent, this.#listItem.element); //рендерим точку в li
+      return;
+    }
+
+    // Проверка на наличие в DOM необходима,
+    // чтобы не пытаться заменить то, что не было отрисовано
+    if (this.#eventsListComponent.contains(prevPointComponent.element)) {
+      replace(this.#pointComponent, prevPointComponent);
+    }
+
+    if (this.#eventsListComponent.contains(prevPointEditComponent.element)) {
+      replace(this.#pointEditComponent, prevPointEditComponent);
+    }
+
+    remove(prevPointComponent);
+    remove(prevPointEditComponent);
   }
+
+  destroy() {
+    remove(this.#pointComponent);
+    remove(this.#pointEditComponent);
+  }
+
 
   #replaceFormToEvent() {
     replace(this.#pointComponent, this.#pointEditComponent);

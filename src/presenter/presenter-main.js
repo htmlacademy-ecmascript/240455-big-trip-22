@@ -13,6 +13,7 @@ export default class PresenterMain {
   #sortingComponent = new Sorting(); //сортировка
   #eventsListComponent = new EventsList(); //список ul
   #noEventsComponent = new NoEvents();
+  #presentersPoint = new Map();
 
   constructor ({presenterContainer, destinationModel, offersModel, pointsModel}) {
     this.#presenterContainer = presenterContainer;
@@ -46,6 +47,12 @@ export default class PresenterMain {
     });
 
     presenterPoint.init(point);
+    this.#presentersPoint.set(point.id, presenterPoint);
+  }
+
+  #clearPointList() {
+    this.#presentersPoint.forEach((presenter) => presenter.destroy());
+    this.#presentersPoint.clear();
   }
 
   #renderMain() {

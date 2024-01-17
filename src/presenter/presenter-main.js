@@ -3,6 +3,7 @@ import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
 import PresenterPoint from './presenter-point.js';
+import { updatePoint } from '../utils/common.js';
 
 export default class PresenterMain {
   #presenterContainer = null;
@@ -38,6 +39,11 @@ export default class PresenterMain {
   #renderNoPoints() {
     render(this.#noEventsComponent, this.#presenterContainer); //нет точек маршрута
   }
+
+  #handlePointChange = (updatedPoint) => {
+    this.#points = updatePoint(this.#points, updatedPoint);
+    this.#presentersPoint.get(updatedPoint.id).init(updatedPoint);
+  };
 
   #renderPoint(point) {
     const presenterPoint = new PresenterPoint({

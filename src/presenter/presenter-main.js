@@ -50,6 +50,7 @@ export default class PresenterMain {
       destinationModel: this.#destinationModel,
       offersModel: this.#offersModel,
       eventsListComponent: this.#eventsListComponent, //список ul
+      onDataChange: this.#handlePointChange,
     });
 
     presenterPoint.init(point);

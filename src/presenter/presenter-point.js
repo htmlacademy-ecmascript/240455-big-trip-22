@@ -18,10 +18,13 @@ export default class PresenterPoint {
 
   #point = null;
 
-  constructor({destinationModel, offersModel, eventsListComponent}) {
+  #handleDataChange = null;
+
+  constructor({destinationModel, offersModel, eventsListComponent, onDataChange}) {
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
     this.#eventsListComponent = eventsListComponent;
+    this.#handleDataChange = onDataChange;
   }
 
   #renderListItem() {
@@ -37,12 +40,12 @@ export default class PresenterPoint {
     this.#offers = this.#offersModel.getByType(this.#point.type);
     this.#destination = this.#destinationModel.getById(this.#point.destination);
 
-
     this.#pointComponent = new Event({
       point: this.#point,
       offers: this.#offers,
       destination: this.#destination,
       onClick: this.#handleEditClick,
+      onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#pointEditComponent = new EditablePoint({
@@ -53,20 +56,18 @@ export default class PresenterPoint {
       onFormSubmit: this.#handleFormSubmit,
     });
 
-    this.#renderListItem(); //рендерим li
-
     if (prevPointComponent === null || prevPointEditComponent === null) {
+      this.#renderListItem(); //рендерим li
       render(this.#pointComponent, this.#listItem.element); //рендерим точку в li
       return;
     }
 
-    // Проверка на наличие в DOM необходима,
-    // чтобы не пытаться заменить то, что не было отрисовано
-    if (this.#eventsListComponent.contains(prevPointComponent.element)) {
+    // Проверка на наличие в DOM необходима, чтобы не пытаться заменить то, что не было отрисовано
+    if (this.#eventsListComponent.element.contains(prevPointComponent.element)) {
       replace(this.#pointComponent, prevPointComponent);
     }
 
-    if (this.#eventsListComponent.contains(prevPointEditComponent.element)) {
+    if (this.#eventsListComponent.element.contains(prevPointEditComponent.element)) {
       replace(this.#pointEditComponent, prevPointEditComponent);
     }
 
@@ -78,7 +79,6 @@ export default class PresenterPoint {
     remove(this.#pointComponent);
     remove(this.#pointEditComponent);
   }
-
 
   #replaceFormToEvent() {
     replace(this.#pointComponent, this.#pointEditComponent);
@@ -97,6 +97,10 @@ export default class PresenterPoint {
     }
   };
 
+  #handleFavoriteClick = () => {
+    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+  };
+
   #handleEditClick = () => {
     this.#replaceEventToForm();
   };
@@ -105,7 +109,8 @@ export default class PresenterPoint {
     this.#replaceFormToEvent();
   };
 
-  #handleFormSubmit = () => { //сохраняем форму
+  #handleFormSubmit = (point) => { //сохраняем форму
+    this.#handleDataChange(point);
     this.#replaceFormToEvent();
   };
 }

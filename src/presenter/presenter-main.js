@@ -40,6 +40,10 @@ export default class PresenterMain {
     render(this.#noEventsComponent, this.#presenterContainer); //нет точек маршрута
   }
 
+  #handleModeChange = () => {
+    this.#presentersPoint.forEach((presenter) => presenter.resetView());
+  };
+
   #handlePointChange = (updatedPoint) => {
     this.#points = updatePoint(this.#points, updatedPoint);
     this.#presentersPoint.get(updatedPoint.id).init(updatedPoint);
@@ -51,6 +55,7 @@ export default class PresenterMain {
       offersModel: this.#offersModel,
       eventsListComponent: this.#eventsListComponent, //список ul
       onDataChange: this.#handlePointChange,
+      onModeChange: this.#handleModeChange
     });
 
     presenterPoint.init(point);

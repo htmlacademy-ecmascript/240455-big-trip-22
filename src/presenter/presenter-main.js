@@ -11,7 +11,7 @@ export default class PresenterMain {
   #offersModel = null;
   #pointsModel = null;
   #points = null;
-  #sortingComponent = new Sorting(); //сортировка
+  #sortComponent = null;
   #eventsListComponent = new EventsList(); //список ul
   #noEventsComponent = new NoEvents();
   #presentersPoint = new Map();
@@ -28,8 +28,18 @@ export default class PresenterMain {
     this.#renderMain();
   }
 
+  #handleSortTypeChange = (sortType) => {
+    // - Сортируем задачи
+    // - Очищаем список
+    // - Рендерим список заново
+  };
+
   #renderSort() {
-    render(this.#sortingComponent, this.#presenterContainer); //сортировка
+    this.#sortComponent = new Sorting({
+      onSortTypeChange: this.#handleSortTypeChange
+    });
+
+    render(this.#sortComponent, this.#presenterContainer); //сортировка
   }
 
   #renderList() {

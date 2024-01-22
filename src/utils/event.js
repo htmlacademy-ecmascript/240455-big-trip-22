@@ -22,7 +22,6 @@ function isEventFuture(date) {
 }
 
 function isEventPresent(dateFrom, dateTo) {
-  //return dayjs().isBetween(dayjs(dateFrom), dayjs(dateTo), 'day', '[]');
   return dayjs().isBetween(dateFrom, dateTo, 'day', '[]');
 }
 

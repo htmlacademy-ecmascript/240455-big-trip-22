@@ -1,6 +1,5 @@
 import { render, replace, remove } from '../framework/render.js';
 import { isEscapeKey } from '../utils/common.js';
-import EventsListItem from '../view/events-list-item.js';
 import EditablePoint from '../view/editable-point.js';
 import Event from '../view/event.js';
 
@@ -17,8 +16,6 @@ export default class PresenterPoint {
   #destination = null;
   #handleModeChange = null;
 
-  #listItem = new EventsListItem();
-
   #pointComponent = null;
   #pointEditComponent = null;
 
@@ -33,10 +30,6 @@ export default class PresenterPoint {
     this.#eventsListComponent = eventsListComponent;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
-  }
-
-  #renderListItem() {
-    render(this.#listItem, this.#eventsListComponent.element);
   }
 
   init(point) {
@@ -65,8 +58,7 @@ export default class PresenterPoint {
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
-      this.#renderListItem(); //рендерим li
-      render(this.#pointComponent, this.#listItem.element); //рендерим точку в li
+      render(this.#pointComponent, this.#eventsListComponent.element);
       return;
     }
 

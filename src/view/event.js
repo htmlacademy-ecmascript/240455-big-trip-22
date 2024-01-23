@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { ucFirst } from '../utils/common.js';
-import { humanizeDate, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, DATE_FORMAT_FOURTH, TIME_FORMAT } from '../utils/event.js';
+import { humanizeDate, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, DATE_FORMAT_FOURTH, TIME_FORMAT, getEventDuration } from '../utils/event.js';
 
 function createOffersTemplate(offers) {
   return offers.length > 0 ?
@@ -24,38 +24,41 @@ function createEvent(point, offers, destination) {
   const timeToHumanized = humanizeDate(dateTo, TIME_FORMAT);
   const timeFromHumanizedAttr = humanizeDate(dateFrom, DATE_FORMAT_FOURTH);
   const timeToHumanizedAttr = humanizeDate(dateTo, DATE_FORMAT_FOURTH);
+  const duration = getEventDuration(dateTo, dateFrom);
   const favorite = isFavorite ? ' event__favorite-btn--active' : '';
   const pointOffers = offers.filter((offer) => point.offers.includes(offer.id));
   const offersTemplate = createOffersTemplate(pointOffers);
 
-  return `<div class="event">
-            <time class="event__date" datetime="${dateFromHumanizedAttr}">${dateFromHumanized}</time>
-            <div class="event__type">
-              <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="${type}">
-            </div>
-            <h3 class="event__title">${ucFirst(type)} ${name}</h3>
-            <div class="event__schedule">
-              <p class="event__time">
-                <time class="event__start-time" datetime="${timeFromHumanizedAttr}">${timeFromHumanized}</time>
-                &mdash;
-                <time class="event__end-time" datetime="${timeToHumanizedAttr}">${timeToHumanized}</time>
+  return `<li class="trip-events__item">
+            <div class="event">
+              <time class="event__date" datetime="${dateFromHumanizedAttr}">${dateFromHumanized}</time>
+              <div class="event__type">
+                <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="${type}">
+              </div>
+              <h3 class="event__title">${ucFirst(type)} ${name}</h3>
+              <div class="event__schedule">
+                <p class="event__time">
+                  <time class="event__start-time" datetime="${timeFromHumanizedAttr}">${timeFromHumanized}</time>
+                  &mdash;
+                  <time class="event__end-time" datetime="${timeToHumanizedAttr}">${timeToHumanized}</time>
+                </p>
+                <p class="event__duration">${duration}M</p>
+              </div>
+              <p class="event__price">
+                &euro;&nbsp;<span class="event__price-value">${price}</span>
               </p>
-              <p class="event__duration">30M</p>
+              ${offersTemplate}
+              <button class="event__favorite-btn${favorite}" type="button">
+                <span class="visually-hidden">Add to favorite</span>
+                <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+                  <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+                </svg>
+              </button>
+              <button class="event__rollup-btn" type="button">
+                <span class="visually-hidden">Open event</span>
+              </button>
             </div>
-            <p class="event__price">
-              &euro;&nbsp;<span class="event__price-value">${price}</span>
-            </p>
-            ${offersTemplate}
-            <button class="event__favorite-btn${favorite}" type="button">
-              <span class="visually-hidden">Add to favorite</span>
-              <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-                <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
-              </svg>
-            </button>
-            <button class="event__rollup-btn" type="button">
-              <span class="visually-hidden">Open event</span>
-            </button>
-          </div>`;
+          </li>`;
 }
 
 export default class Event extends AbstractView {

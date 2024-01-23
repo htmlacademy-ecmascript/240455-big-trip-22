@@ -4,6 +4,8 @@ import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
 import PresenterPoint from './presenter-point.js';
 import { updatePoint } from '../utils/common.js';
+import { SortType } from '../mock/const.js';
+import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 
 export default class PresenterMain {
   #presenterContainer = null;
@@ -15,6 +17,8 @@ export default class PresenterMain {
   #eventsListComponent = new EventsList(); //список ul
   #noEventsComponent = new NoEvents();
   #presentersPoint = new Map();
+  #currentSortType = SortType.DAY;
+  #sourcedPoints = [];
 
   constructor ({presenterContainer, destinationModel, offersModel, pointsModel}) {
     this.#presenterContainer = presenterContainer;
@@ -24,14 +28,51 @@ export default class PresenterMain {
   }
 
   init() {
-    this.#points = [...this.#pointsModel.points];
+    this.#points = [...this.#pointsModel.points].sort(sortEventsByDate);
+    // 1. В отличии от сортировки по любому параметру,
+    // исходный порядок можно сохранить только одним способом -
+    // сохранив исходный массив:
+    this.#sourcedPoints = [...this.#pointsModel.points].sort(sortEventsByDate);
+    this.#renderSort();
     this.#renderMain();
   }
 
+  #handlePointChange = (updatedPoint) => {
+    this.#points = updatePoint(this.#points, updatedPoint);
+    this.#sourcedPoints = updatePoint(this.#sourcedPoints, updatedPoint);
+    this.#presentersPoint.get(updatedPoint.id).init(updatedPoint);
+  };
+
+  #sortPoints(sortType) {
+    // 2. Этот исходный массив задач необходим,
+    // потому что для сортировки мы будем мутировать
+    // массив в свойстве _boardTasks
+    switch (sortType) {
+      case SortType.TIME:
+        this.#points.sort(sortEventsByTime);
+        break;
+      case SortType.PRICE:
+        this.#points.sort(sortEventsByPrice);
+        break;
+      default:
+        //this.#points.sort(sortEventsByDate);
+        // 3. А когда пользователь захочет "вернуть всё, как было",
+        // мы просто запишем в _boardTasks исходный массив
+        //this.#points = [...this.#sourcedPoints];
+        this.#points = this.#sourcedPoints;
+    }
+
+    this.#currentSortType = sortType;
+  }
+
   #handleSortTypeChange = (sortType) => {
-    // - Сортируем задачи
-    // - Очищаем список
-    // - Рендерим список заново
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortPoints(sortType);
+    this.#clearPointList();
+    this.#renderMain();
   };
 
   #renderSort() {
@@ -54,16 +95,11 @@ export default class PresenterMain {
     this.#presentersPoint.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (updatedPoint) => {
-    this.#points = updatePoint(this.#points, updatedPoint);
-    this.#presentersPoint.get(updatedPoint.id).init(updatedPoint);
-  };
-
   #renderPoint(point) {
     const presenterPoint = new PresenterPoint({
       destinationModel: this.#destinationModel,
       offersModel: this.#offersModel,
-      eventsListComponent: this.#eventsListComponent, //список ul
+      eventsListComponent: this.#eventsListComponent,
       onDataChange: this.#handlePointChange,
       onModeChange: this.#handleModeChange
     });
@@ -83,7 +119,6 @@ export default class PresenterMain {
       return;
     }
 
-    this.#renderSort();
     this.#renderList();
 
     for (let i = 0; i < this.#points.length; i++) {

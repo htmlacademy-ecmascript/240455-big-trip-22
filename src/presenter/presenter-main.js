@@ -50,9 +50,11 @@ export default class PresenterMain {
     switch (sortType) {
       case SortType.TIME:
         this.#points.sort(sortEventsByTime);
+        this.#points.reverse();
         break;
       case SortType.PRICE:
         this.#points.sort(sortEventsByPrice);
+        this.#points.reverse();
         break;
       default:
         //this.#points.sort(sortEventsByDate);

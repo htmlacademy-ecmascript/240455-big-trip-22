@@ -29,9 +29,6 @@ export default class PresenterMain {
 
   init() {
     this.#points = [...this.#pointsModel.points].sort(sortEventsByDate);
-    // 1. В отличии от сортировки по любому параметру,
-    // исходный порядок можно сохранить только одним способом -
-    // сохранив исходный массив:
     this.#sourcedPoints = [...this.#pointsModel.points].sort(sortEventsByDate);
     this.#renderSort();
     this.#renderMain();
@@ -44,9 +41,6 @@ export default class PresenterMain {
   };
 
   #sortPoints(sortType) {
-    // 2. Этот исходный массив задач необходим,
-    // потому что для сортировки мы будем мутировать
-    // массив в свойстве _boardTasks
     switch (sortType) {
       case SortType.TIME:
         this.#points.sort(sortEventsByTime);
@@ -57,10 +51,6 @@ export default class PresenterMain {
         this.#points.reverse();
         break;
       default:
-        //this.#points.sort(sortEventsByDate);
-        // 3. А когда пользователь захочет "вернуть всё, как было",
-        // мы просто запишем в _boardTasks исходный массив
-        //this.#points = [...this.#sourcedPoints];
         this.#points = this.#sourcedPoints;
     }
 

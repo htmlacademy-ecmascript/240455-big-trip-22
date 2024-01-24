@@ -3,15 +3,13 @@ import { createIdGenerator, getRandomInteger, getRandomArrayElement } from '../u
 const generatePointId = createIdGenerator();
 
 const datesFrom = [
-  new Date('2023-12-31, 16:00'),
-  new Date('2024-01-05, 17:00'),
-  new Date('2024-02-06, 18:00'),
+  new Date('2024-12-24, 09:05'),
+  new Date('2024-12-26, 01:03'),
 ];
 
 const datesTo = [
-  new Date('2024-02-06, 19:00'),
-  new Date('2024-03-04, 20:00'),
-  new Date('2024-04-17, 21:00'),
+  new Date('2024-12-31, 17:16'),
+  new Date('2025-01-05, 12:31'),
 ];
 
 const generatePoint = (type, offersIds, destinationId) => ({

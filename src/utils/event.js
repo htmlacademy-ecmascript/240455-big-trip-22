@@ -25,34 +25,43 @@ function isEventPresent(dateFrom, dateTo) {
   return dayjs().isBetween(dateFrom, dateTo, 'day', '[]');
 }
 
-// Менее часа: минуты (например, 23M);
-// Менее суток: часы минуты (например, 02H 44M или 12H 00M, если минуты равны нулю);
-// Более суток: дни часы минуты (например, 51D 02H 30M или 07D 00H 00M, если часы и/или минуты равны нулю).
-
+//длина маршрута
 function getEventDuration(dateTo, dateFrom) {
-  const minutes = dayjs(dateTo).diff(dayjs(dateFrom), 'minute');
+  let minutes = dayjs(dateTo).diff(dayjs(dateFrom), 'minute');
 
   if (minutes < 60) {
-    // return `${minutes}M`;
+    return minutes < 10 ? `0${minutes}M` : `${minutes}M`;
   } else {
     if (minutes < 1440) {
-      // const remainingMinutes = minutes % 60;
-      // return remainingMinutes;
-      //const hours = Math. floor(minutes / 60);
-      // return `${hours}H ${remainingMinutes}M`;
+      let hours = Math.floor(minutes / 60);
+      minutes = minutes % 60;
+      minutes = minutes < 10 ? `0${minutes}M` : `${minutes}M`;
+      hours = hours < 10 ? `0${hours}H` : `${hours}H`;
+      return `${hours} ${minutes}`;
+    } else {
+      let hours = Math.floor(minutes / 60);
+      minutes = minutes % 60;
+      let days = Math.floor(hours / 24);
+      hours = hours % 24;
+      minutes = minutes < 10 ? `0${minutes}M` : `${minutes}M`;
+      hours = hours < 10 ? `0${hours}H` : `${hours}H`;
+      days = days < 10 ? `0${days}D` : `${days}D`;
+      return `${days} ${hours} ${minutes}`;
     }
   }
-  //return minutes;
 }
 
+//сортировка дат по возрастанию
 function sortEventsByDate(eventA, eventB) {
   return dayjs(eventA.dateFrom).diff(dayjs(eventB.dateFrom));
 }
 
+//сортировка времени по убыванию
 function sortEventsByTime(eventA, eventB) {
   return dayjs(eventA.dateTo).diff(dayjs(eventA.dateFrom)) - dayjs(eventB.dateTo).diff(dayjs(eventB.dateFrom));
 }
 
+//сортировка цен по убыванию
 function sortEventsByPrice(eventA, eventB) {
   return eventA.price - eventB.price;
 }

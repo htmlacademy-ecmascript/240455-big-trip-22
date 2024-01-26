@@ -71,4 +71,12 @@ const FilterType = {
   PRICE: 'price',
 };
 
-export { TYPES, OFFERS, CITIES, DESCRIPTIONS, PHOTOS_COUNT, POINTS_COUNT, OFFER_COUNT, FilterType };
+const SortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers',
+};
+
+export { TYPES, OFFERS, CITIES, DESCRIPTIONS, PHOTOS_COUNT, POINTS_COUNT, OFFER_COUNT, FilterType, SortType };

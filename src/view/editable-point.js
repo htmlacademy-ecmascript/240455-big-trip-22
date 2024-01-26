@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { ucFirst } from '../utils/common.js';
 import { humanizeDate, DATE_FORMAT_FIRST } from '../utils/event.js';
-import { TYPES } from '../mock/const.js';
+import { TYPES } from '../const.js';
 
 const BLANK_POINT = {
   id: 1,

@@ -1,4 +1,4 @@
-import { FilterType } from '../mock/const.js';
+import { FilterType } from '../const.js';
 import { isEventExpired, isEventFuture, isEventPresent } from './event.js';
 
 const filters = {

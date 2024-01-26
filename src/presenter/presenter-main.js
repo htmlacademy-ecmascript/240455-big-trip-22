@@ -4,7 +4,7 @@ import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
 import PresenterPoint from './presenter-point.js';
 import { updatePoint } from '../utils/common.js';
-import { SortType } from '../mock/const.js';
+import { SortType } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 
 export default class PresenterMain {

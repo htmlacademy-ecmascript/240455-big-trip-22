@@ -71,7 +71,7 @@ export default class Event extends AbstractView {
   constructor ({onClick, point, offers, destination, onFavoriteClick}) {
     super();
     this.#point = point;
-    this.#offers = offers;
+    this.#offers = offers.getByType(this.#point.type);
     this.#destination = destination;
     this.#handleClick = onClick;
     this.#handleFavoriteClick = onFavoriteClick;

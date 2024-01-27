@@ -47,7 +47,6 @@ export default class MockService {
 
       const destination = getRandomArrayElement(this.#destinations);
       const hasOffers = getRandomInteger(0, 1);
-
       const offersByType = this.#offers
         .find((offerByType) => offerByType.type === type);
 

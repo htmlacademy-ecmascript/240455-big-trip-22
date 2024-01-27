@@ -12,8 +12,8 @@ export default class PresenterPoint {
   #destinationModel = null;
   #offersModel = null;
   #eventsListComponent = null;
-  #offers = null;
   #destination = null;
+  #destinationById = null;
   #handleModeChange = null;
 
   #pointComponent = null;
@@ -38,21 +38,23 @@ export default class PresenterPoint {
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
-    this.#offers = this.#offersModel.getByType(this.#point.type);
-    this.#destination = this.#destinationModel.getById(this.#point.destinationId);
+    this.#destination = this.#destinationModel.destinations;
+    this.#destinationById = this.#destinationModel.getById(this.#point.destinationId);
 
     this.#pointComponent = new Event({
       point: this.#point,
-      offers: this.#offers,
-      destination: this.#destination,
+      offers: this.#offersModel,
+      destination: this.#destinationById,
+      allDestinations: this.#destination,
       onClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#pointEditComponent = new EditablePoint({
       point: this.#point,
-      offers: this.#offers,
-      destination:  this.#destination,
+      offers: this.#offersModel,
+      destination: this.#destinationById,
+      allDestinations: this.#destination,
       onClick: this.#handleFormClose,
       onFormSubmit: this.#handleFormSubmit,
     });

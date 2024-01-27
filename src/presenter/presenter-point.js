@@ -39,7 +39,7 @@ export default class PresenterPoint {
     const prevPointEditComponent = this.#pointEditComponent;
 
     this.#offers = this.#offersModel.getByType(this.#point.type);
-    this.#destination = this.#destinationModel.getById(this.#point.destination);
+    this.#destination = this.#destinationModel.getById(this.#point.destinationId);
 
     this.#pointComponent = new Event({
       point: this.#point,

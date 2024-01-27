@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { ucFirst } from '../utils/common.js';
 import { humanizeDate, DATE_FORMAT_FIRST } from '../utils/event.js';
 import { TYPES } from '../const.js';
@@ -6,8 +6,8 @@ import { TYPES } from '../const.js';
 const BLANK_POINT = {
   id: 1,
   type: 'Flight',
-  offers: [],
-  destination: '',
+  offersIds: [],
+  destinationId: '',
   dateFrom: '',
   dateTo: '',
   price: 0,
@@ -65,7 +65,7 @@ function createEditablePoint(point, offers, destination) {
   const dateFromHumanized = humanizeDate(dateFrom, DATE_FORMAT_FIRST);
   const dateToHumanized = humanizeDate(dateTo, DATE_FORMAT_FIRST);
   const typesList = createTypesList(TYPES, type);
-  const offersTemplate = createOffersTemplate(offers, point.offers);
+  const offersTemplate = createOffersTemplate(offers, point.offersIds);
   const destinationTemplate = typeof destination !== 'undefined' ? (createDestinationTemplate({ name, description, photos })) : '';
 
   return `<li class="trip-events__item">
@@ -126,7 +126,7 @@ function createEditablePoint(point, offers, destination) {
           </li>`;
 }
 
-export default class EditablePoint extends AbstractView {
+export default class EditablePoint extends AbstractStatefulView {
   #point;
   #offers;
   #destination;
@@ -135,9 +135,10 @@ export default class EditablePoint extends AbstractView {
 
   constructor ({onClick, onFormSubmit, point = BLANK_POINT, offers, destination}) {
     super();
-    this.#point = point;
-    this.#offers = offers;
-    this.#destination = destination;
+    this._setState(EditablePoint.parsePointToState(point));
+    this._setState(EditablePoint.parseOffersToState(offers));
+    this._setState(EditablePoint.parseDestinationToState(destination));
+
     this.#handleClick = onClick;
     this.#handleFormSubmit = onFormSubmit;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
@@ -145,7 +146,8 @@ export default class EditablePoint extends AbstractView {
   }
 
   get template () {
-    return createEditablePoint(this.#point, this.#offers, this.#destination);
+
+    return createEditablePoint(this._state, this._state.offers, this._state.destination);
   }
 
   #clickHandler = (evt) => {
@@ -155,6 +157,40 @@ export default class EditablePoint extends AbstractView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#point);
+    this.#handleFormSubmit(EditablePoint.parseStateToPoint(this._state));
   };
+
+  static parsePointToState(point) {
+    return {...point,
+    };
+  }
+
+  static parseStateToPoint(state) {
+    const point = {...state};
+    return point;
+  }
+
+  static parseOffersToState(offers) {
+    const offersNew = new Array();
+    offersNew.offers = [...offers,];
+    return offersNew;
+  }
+
+  static parseStateToOffers(state) {
+    const offers = {...state};
+
+    return offers;
+  }
+
+  static parseDestinationToState(destination) {
+    const destinationNew = new Object();
+    destinationNew.destination = {...destination,};
+    return destinationNew;
+  }
+
+  static parseStateToDestination(state) {
+    const destination = {...state};
+
+    return destination;
+  }
 }

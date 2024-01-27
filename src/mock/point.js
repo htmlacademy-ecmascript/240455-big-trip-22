@@ -15,8 +15,8 @@ const datesTo = [
 const generatePoint = (type, offersIds, destinationId) => ({
   id: generatePointId(),
   type: type,
-  offers: offersIds,
-  destination: destinationId,
+  offersIds: offersIds,
+  destinationId: destinationId,
   dateFrom: getRandomArrayElement(datesFrom),
   dateTo: getRandomArrayElement(datesTo),
   isFavorite: getRandomInteger(0, 1),

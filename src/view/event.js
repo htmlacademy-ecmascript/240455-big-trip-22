@@ -26,7 +26,7 @@ function createEvent(point, offers, destination) {
   const timeToHumanizedAttr = humanizeDate(dateTo, DATE_FORMAT_FOURTH);
   const duration = getEventDuration(dateTo, dateFrom);
   const favorite = isFavorite ? ' event__favorite-btn--active' : '';
-  const pointOffers = offers.filter((offer) => point.offers.includes(offer.id));
+  const pointOffers = offers.filter((offer) => point.offersIds.includes(offer.id));
   const offersTemplate = createOffersTemplate(pointOffers);
 
   return `<li class="trip-events__item">

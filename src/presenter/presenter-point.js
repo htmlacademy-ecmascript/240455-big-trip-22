@@ -79,6 +79,7 @@ export default class PresenterPoint {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToEvent();
     }
   }
@@ -104,7 +105,7 @@ export default class PresenterPoint {
   #escKeyDownHandler = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      this.#replaceFormToEvent();
+      this.#handleFormClose();
     }
   };
 
@@ -117,6 +118,7 @@ export default class PresenterPoint {
   };
 
   #handleFormClose = () => { //закрываем форму без сохранения
+    this.#pointEditComponent.reset(this.#point, this.#offersModel, this.#destinationModel);
     this.#replaceFormToEvent();
   };
 

@@ -142,7 +142,6 @@ export default class EditablePoint extends AbstractStatefulView {
 
   constructor ({point = BLANK_POINT, offers, destinations, onClick, onFormSubmit}) {
     super();
-
     this._setState(EditablePoint.parsePointToState(point));
     this._setState(EditablePoint.parseOffersToState(offers, point.type));
     this._setState(EditablePoint.parseDestinationToState(destinations, point.destinationId));
@@ -155,6 +154,13 @@ export default class EditablePoint extends AbstractStatefulView {
 
   get template () {
     return createEditablePoint(this._state, this._state.offersByType, this._state.destinationsAll, this._state.destination);
+  }
+
+  reset(point, offers, destinations) {
+    this._setState(EditablePoint.parsePointToState(point));
+    this._setState(EditablePoint.parseOffersToState(offers, point.type));
+    this._setState(EditablePoint.parseDestinationToState(destinations, point.destinationId));
+    this.updateElement(this._setState);
   }
 
   _restoreHandlers() {
@@ -221,7 +227,6 @@ export default class EditablePoint extends AbstractStatefulView {
       });
     }
   };
-
 
   static parsePointToState(point) {
     return {...point};

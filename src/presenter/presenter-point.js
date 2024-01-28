@@ -53,8 +53,9 @@ export default class PresenterPoint {
     this.#pointEditComponent = new EditablePoint({
       point: this.#point,
       offers: this.#offersModel,
-      destination: this.#destinationById,
-      allDestinations: this.#destination,
+      destinations: this.#destinationModel,
+      // destination: this.#destinationById,
+      // allDestinations: this.#destination,
       onClick: this.#handleFormClose,
       onFormSubmit: this.#handleFormSubmit,
     });

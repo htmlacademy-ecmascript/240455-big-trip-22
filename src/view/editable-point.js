@@ -28,7 +28,7 @@ function createOffersTemplate(offers, pointsOffers) {
         <div class="event__available-offers">
         ${offers.map((offer) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}"${pointsOffers.includes(offer.id) ? ' checked' : ''}>
+      <input data-event-offer-id="${offer.id}" class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}"${pointsOffers.includes(offer.id) ? ' checked' : ''}>
       <label class="event__offer-label" for="event-offer-${offer.id}-1">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
@@ -66,20 +66,20 @@ function createPhotosTemplate(photos) {
     </div>` : '';
 }
 
-function createEditablePoint(point, offers, destination, allDestinations) {
+function createEditablePoint(point, offers, destinationsAll, destination) {
   const { id, type, dateFrom, dateTo, price } = point;
-
   const { name, description, photos } = typeof destination !== 'undefined' ? destination : '';
   const destinationName = typeof name !== 'undefined' ? name : '';
   const destinationTemplate = typeof destination !== 'undefined' ? (createDestinationTemplate({ name, description, photos })) : '';
-  const destinationsList = allDestinations;
-  const destinationsListTemplate = createDestinationsList(destinationsList, destinationName);
+  const destinationsListTemplate = createDestinationsList(destinationsAll, destinationName);
 
   const dateFromHumanized = humanizeDate(dateFrom, DATE_FORMAT_FIRST);
   const dateToHumanized = humanizeDate(dateTo, DATE_FORMAT_FIRST);
 
   const typesList = createTypesList(TYPES, type);
   const offersTemplate = createOffersTemplate(offers, point.offersIds);
+
+  const isSubmitDisabled = typeof destination === 'undefined';
 
   return `<li class="trip-events__item">
             <form class="event event--edit" action="#" method="post">
@@ -122,7 +122,7 @@ function createEditablePoint(point, offers, destination, allDestinations) {
                   <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
                 </div>
 
-                <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+                <button class="event__save-btn  btn  btn--blue" type="submit"${isSubmitDisabled ? ' disabled' : ''}>Save</button>
                 <button class="event__reset-btn" type="reset">Delete</button>
                 <button class="event__rollup-btn" type="button">
                   <span class="visually-hidden">Open event</span>
@@ -139,19 +139,13 @@ function createEditablePoint(point, offers, destination, allDestinations) {
 export default class EditablePoint extends AbstractStatefulView {
   #handleClick = null;
   #handleFormSubmit = null;
-  #allDestinations = null;
-  //#offersByType = null;
 
-  constructor ({point = BLANK_POINT, offers, destination, allDestinations, onClick, onFormSubmit}) {
+  constructor ({point = BLANK_POINT, offers, destinations, onClick, onFormSubmit}) {
     super();
-
-    //this.#offersByType = offers.getByType(point.type);
 
     this._setState(EditablePoint.parsePointToState(point));
     this._setState(EditablePoint.parseOffersToState(offers, point.type));
-    this._setState(EditablePoint.parseDestinationToState(destination));
-
-    this.#allDestinations = allDestinations;
+    this._setState(EditablePoint.parseDestinationToState(destinations, point.destinationId));
 
     this.#handleClick = onClick;
     this.#handleFormSubmit = onFormSubmit;
@@ -160,7 +154,7 @@ export default class EditablePoint extends AbstractStatefulView {
   }
 
   get template () {
-    return createEditablePoint(this._state, this._state.offersByType, this._state.destination, this.#allDestinations);
+    return createEditablePoint(this._state, this._state.offersByType, this._state.destinationsAll, this._state.destination);
   }
 
   _restoreHandlers() {
@@ -168,6 +162,10 @@ export default class EditablePoint extends AbstractStatefulView {
     this.element.addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelectorAll('.event__type-label').forEach((element) => {
       element.addEventListener('click', this.#eventTypeClickHandler);
+    });
+    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputHandler);
+    this.element.querySelectorAll('.event__offer-checkbox').forEach((element) => {
+      element.addEventListener('change', this.#eventOfferChangeHandler);
     });
   }
 
@@ -183,15 +181,47 @@ export default class EditablePoint extends AbstractStatefulView {
 
   #eventTypeClickHandler = (evt) => {
     evt.preventDefault();
-
     this._state.type = evt.target.dataset.type;
     this._state.offersByType = this._state.offers.find((offer) => offer.type === this._state.type);
 
     this.updateElement({
       type: this._state.type,
       offersByType: this._state.offersByType.offers,
+      offersIds: [],
     });
   };
+
+  #destinationInputHandler = (evt) => {
+    evt.preventDefault();
+    this._state.destination = this._state.destinationsAll.find((destination) => destination.name === evt.target.value);
+
+    if (this._state.destination !== undefined) {
+      this._state.destinationId = this._state.destination.id;
+    }
+
+    this.updateElement({
+      destination: this._state.destination,
+      destinationId: this._state.destinationId,
+    });
+  };
+
+  #eventOfferChangeHandler = (evt) => {
+    evt.preventDefault();
+
+    const id = (parseInt(evt.target.dataset.eventOfferId, 10));
+
+    if (!this._state.offersIds.includes(id)) {
+      this.updateElement({
+        offersIds: [...this._state.offersIds, id],
+      });
+    } else {
+      const filteredoffersIds = this._state.offersIds.filter((offersId) => offersId !== id);
+      this.updateElement({
+        offersIds: filteredoffersIds,
+      });
+    }
+  };
+
 
   static parsePointToState(point) {
     return {...point};
@@ -206,22 +236,17 @@ export default class EditablePoint extends AbstractStatefulView {
     return offersNew;
   }
 
-  static parseDestinationToState(destination) {
+  static parseDestinationToState(destinations, id) {
     const destinationNew = new Object();
-    destinationNew.destination = {...destination,};
+    const destinationsAll = destinations.destinations;
+    destinationNew.destinationsAll = [...destinationsAll];
+    const destination = destinations.getById(id);
+    destinationNew.destination = {...destination};
     return destinationNew;
   }
 
   static parseStateToPoint(state) {
     const point = {...state};
-
-    // if (сработал обработчик события на выборе из списка типов) {
-    //   point.type = null;
-    // }
-
-    // if (сработал обработчик события на выборе из destination) {
-    //   destinationId = null;
-    // }
 
     return point;
   }

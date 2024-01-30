@@ -163,7 +163,7 @@ export default class EditablePoint extends AbstractStatefulView {
     this.element.querySelectorAll('.event__type-label').forEach((element) => {
       element.addEventListener('click', this.#eventTypeClickHandler);
     });
-    this.element.querySelector('.event__input--destination').addEventListener('blur', this.#destinationOnblurHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelectorAll('.event__offer-checkbox').forEach((element) => {
       element.addEventListener('change', this.#eventOfferChangeHandler);
     });
@@ -190,7 +190,7 @@ export default class EditablePoint extends AbstractStatefulView {
     });
   };
 
-  #destinationOnblurHandler = (evt) => {
+  #destinationChangeHandler = (evt) => {
     evt.preventDefault();
 
     const destinationOriginal = this._state.destinationById;

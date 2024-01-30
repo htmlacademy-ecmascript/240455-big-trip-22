@@ -9,11 +9,8 @@ const Mode = {
 };
 
 export default class PresenterPoint {
-  #destinationModel = null;
-  #offersModel = null;
+  #pointsModel = null;
   #eventsListComponent = null;
-  #destination = null;
-  #destinationById = null;
   #handleModeChange = null;
 
   #pointComponent = null;
@@ -24,38 +21,32 @@ export default class PresenterPoint {
 
   #handleDataChange = null;
 
-  constructor({destinationModel, offersModel, eventsListComponent, onDataChange, onModeChange}) {
-    this.#destinationModel = destinationModel;
-    this.#offersModel = offersModel;
+  constructor({pointsModel, eventsListComponent, onDataChange, onModeChange}) {
+    this.#pointsModel = pointsModel;
     this.#eventsListComponent = eventsListComponent;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
 
   init(point) {
-    this.#point = point;
-
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
-    this.#destination = this.#destinationModel.destinations;
-    this.#destinationById = this.#destinationModel.getById(this.#point.destinationId);
+    this.#point = {...point,
+      offersAll: this.#pointsModel.offers,
+      offersByType: this.#pointsModel.getByOffersType(point.type),
+      destinationsAll: this.#pointsModel.destinations,
+      destinationById: this.#pointsModel.getByDestinationId(point.destination),
+    };
 
     this.#pointComponent = new Event({
       point: this.#point,
-      offers: this.#offersModel,
-      destination: this.#destinationById,
-      allDestinations: this.#destination,
       onClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#pointEditComponent = new EditablePoint({
       point: this.#point,
-      offers: this.#offersModel,
-      destinations: this.#destinationModel,
-      // destination: this.#destinationById,
-      // allDestinations: this.#destination,
       onClick: this.#handleFormClose,
       onFormSubmit: this.#handleFormSubmit,
     });
@@ -118,7 +109,7 @@ export default class PresenterPoint {
   };
 
   #handleFormClose = () => { //закрываем форму без сохранения
-    this.#pointEditComponent.reset(this.#point, this.#offersModel, this.#destinationModel);
+    this.#pointEditComponent.reset(this.#point);
     this.#replaceFormToEvent();
   };
 

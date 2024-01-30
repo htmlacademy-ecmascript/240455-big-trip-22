@@ -9,8 +9,6 @@ import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/
 
 export default class PresenterMain {
   #presenterContainer = null;
-  #destinationModel = null;
-  #offersModel = null;
   #pointsModel = null;
   #points = null;
   #sortComponent = null;
@@ -19,11 +17,8 @@ export default class PresenterMain {
   #presentersPoint = new Map();
   #currentSortType = SortType.DAY;
   #sourcedPoints = [];
-
-  constructor ({presenterContainer, destinationModel, offersModel, pointsModel}) {
+  constructor ({presenterContainer, pointsModel}) {
     this.#presenterContainer = presenterContainer;
-    this.#destinationModel = destinationModel;
-    this.#offersModel = offersModel;
     this.#pointsModel = pointsModel;
   }
 
@@ -89,8 +84,7 @@ export default class PresenterMain {
 
   #renderPoint(point) {
     const presenterPoint = new PresenterPoint({
-      destinationModel: this.#destinationModel,
-      offersModel: this.#offersModel,
+      pointsModel: this.#pointsModel,
       eventsListComponent: this.#eventsListComponent,
       onDataChange: this.#handlePointChange,
       onModeChange: this.#handleModeChange

@@ -50,13 +50,13 @@ export default class MockService {
       const offersByType = this.#offers
         .find((offerByType) => offerByType.type === type);
 
-      const offersIds = (hasOffers)
+      const offers = (hasOffers)
         ? offersByType.offers
           .slice(0, getRandomInteger(0, OFFER_COUNT))
           .map((offer) => offer.id)
         : [];
 
-      return generatePoint(type, offersIds, destination.id);
+      return generatePoint(type, offers, destination.id);
     });
   }
 }

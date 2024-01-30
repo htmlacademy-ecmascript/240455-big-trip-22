@@ -16,7 +16,7 @@ export default class PresenterMain {
   #noEventsComponent = new NoEvents();
   #presentersPoint = new Map();
   #currentSortType = SortType.DAY;
-  #sourcedPoints = [];
+  //#sourcedPoints = [];
   constructor ({presenterContainer, pointsModel}) {
     this.#presenterContainer = presenterContainer;
     this.#pointsModel = pointsModel;
@@ -24,14 +24,12 @@ export default class PresenterMain {
 
   init() {
     this.#points = [...this.#pointsModel.points].sort(sortEventsByDate);
-    this.#sourcedPoints = [...this.#pointsModel.points].sort(sortEventsByDate);
     this.#renderSort();
     this.#renderMain();
   }
 
   #handlePointChange = (updatedPoint) => {
     this.#points = updatePoint(this.#points, updatedPoint);
-    this.#sourcedPoints = updatePoint(this.#sourcedPoints, updatedPoint);
     this.#presentersPoint.get(updatedPoint.id).init(updatedPoint);
   };
 
@@ -46,7 +44,7 @@ export default class PresenterMain {
         this.#points.reverse();
         break;
       default:
-        this.#points = this.#sourcedPoints;
+        this.#points.sort(sortEventsByDate);
     }
 
     this.#currentSortType = sortType;

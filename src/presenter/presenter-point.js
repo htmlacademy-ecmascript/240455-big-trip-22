@@ -2,6 +2,7 @@ import { render, replace, remove } from '../framework/render.js';
 import { isEscapeKey } from '../utils/common.js';
 import EditablePoint from '../view/editable-point.js';
 import Event from '../view/event.js';
+import {UserAction, UpdateType} from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -101,7 +102,11 @@ export default class PresenterPoint {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this.#point, isFavorite: !this.#point.isFavorite},
+    );
   };
 
   #handleEditClick = () => {
@@ -114,7 +119,11 @@ export default class PresenterPoint {
   };
 
   #handleFormSubmit = (point) => { //сохраняем форму
-    this.#handleDataChange(point);
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MAJOR,
+      point,
+    );
     this.#replaceFormToEvent();
   };
 }

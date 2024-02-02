@@ -141,6 +141,7 @@ function createEditablePoint(point, offers, destinationsAll, destination) {
 export default class EditablePoint extends AbstractStatefulView {
   #handleClick = null;
   #handleFormSubmit = null;
+  #datepicker = null;
 
   constructor ({point = BLANK_POINT, onClick, onFormSubmit}) {
     super();
@@ -155,10 +156,33 @@ export default class EditablePoint extends AbstractStatefulView {
     return createEditablePoint(this._state, this._state.offersByType, this._state.destinationsAll, this._state.destinationById);
   }
 
+  // Перегружаем метод родителя removeElement,
+  // чтобы при удалении удалялся более не нужный календарь
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
+  }
+
   reset(point) {
     this._setState(EditablePoint.parsePointToState(point));
     this.updateElement(this._setState);
   }
+
+  #dateChangeHandlerFrom = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateChangeHandlerTo = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
 
   _restoreHandlers() {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
@@ -170,6 +194,9 @@ export default class EditablePoint extends AbstractStatefulView {
     this.element.querySelectorAll('.event__offer-checkbox').forEach((element) => {
       element.addEventListener('change', this.#eventOfferChangeHandler);
     });
+
+    this.#setDatepickerFrom();
+    this.#setDatepickerTo();
   }
 
   #clickHandler = (evt) => {
@@ -224,6 +251,34 @@ export default class EditablePoint extends AbstractStatefulView {
       });
     }
   };
+
+  #setDatepickerFrom() {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateFrom,
+        enableTime: true,
+        //time_24hr: true,
+        onChange: this.#dateChangeHandlerFrom, // На событие flatpickr передаём наш колбэк
+      },
+    );
+  }
+
+  #setDatepickerTo() {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        defaultDate: this._state.dateTo,
+        enableTime: true,
+        //time_24hr: true,
+        minDate: this._state.dateFrom,
+        onChange: this.#dateChangeHandlerTo, // На событие flatpickr передаём наш колбэк
+      },
+    );
+  }
+
 
   static parsePointToState(point) {
     return {...point };

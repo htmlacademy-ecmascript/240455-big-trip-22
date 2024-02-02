@@ -4,7 +4,7 @@
 
 ```bash
 npm i <package>@<version> -E
-npm i dayjs@1.11.7 -E
+npm i flatpickr@4.6.13 -E
 npm i eslint@8.38.0 -DE
 ```
 

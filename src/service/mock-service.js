@@ -1,5 +1,5 @@
 import { getRandomArrayElement, getRandomInteger } from '../utils/common.js';
-import { POINTS_COUNT, TYPES, CITIES, OFFER_COUNT } from '../mock/const.js';
+import { POINTS_COUNT, TYPES, CITIES, OFFER_COUNT } from '../const.js';
 import { generateDestination } from '../mock/destination.js';
 import { generateOffer } from '../mock/offer.js';
 import { generatePoint } from '../mock/point.js';
@@ -47,17 +47,16 @@ export default class MockService {
 
       const destination = getRandomArrayElement(this.#destinations);
       const hasOffers = getRandomInteger(0, 1);
-
       const offersByType = this.#offers
         .find((offerByType) => offerByType.type === type);
 
-      const offersIds = (hasOffers)
+      const offers = (hasOffers)
         ? offersByType.offers
           .slice(0, getRandomInteger(0, OFFER_COUNT))
           .map((offer) => offer.id)
         : [];
 
-      return generatePoint(type, offersIds, destination.id);
+      return generatePoint(type, offers, destination.id);
     });
   }
 }

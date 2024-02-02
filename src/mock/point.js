@@ -12,10 +12,10 @@ const datesTo = [
   new Date('2025-01-05, 12:31'),
 ];
 
-const generatePoint = (type, offersIds, destinationId) => ({
+const generatePoint = (type, offers, destinationId) => ({
   id: generatePointId(),
   type: type,
-  offers: offersIds,
+  offers: offers,
   destination: destinationId,
   dateFrom: getRandomArrayElement(datesFrom),
   dateTo: getRandomArrayElement(datesTo),

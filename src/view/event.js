@@ -26,7 +26,7 @@ function createEvent(point, offers, destination) {
   const timeToHumanizedAttr = humanizeDate(dateTo, DATE_FORMAT_FOURTH);
   const duration = getEventDuration(dateTo, dateFrom);
   const favorite = isFavorite ? ' event__favorite-btn--active' : '';
-  const pointOffers = offers.filter((offer) => point.offers.includes(offer.id));
+  const pointOffers = point.offersByType.filter((offer) => offers.includes(offer.id));
   const offersTemplate = createOffersTemplate(pointOffers);
 
   return `<li class="trip-events__item">
@@ -63,16 +63,12 @@ function createEvent(point, offers, destination) {
 
 export default class Event extends AbstractView {
   #point;
-  #offers;
-  #destination;
   #handleClick = null;
   #handleFavoriteClick = null;
 
-  constructor ({onClick, point, offers, destination, onFavoriteClick}) {
+  constructor ({point, onClick, onFavoriteClick}) {
     super();
     this.#point = point;
-    this.#offers = offers;
-    this.#destination = destination;
     this.#handleClick = onClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
@@ -81,7 +77,7 @@ export default class Event extends AbstractView {
   }
 
   get template () {
-    return createEvent(this.#point, this.#offers, this.#destination);
+    return createEvent(this.#point, this.#point.offers, this.#point.destinationById);
   }
 
   #favoriteClickHandler = (evt) => {

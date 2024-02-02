@@ -4,13 +4,11 @@ import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
 import PresenterPoint from './presenter-point.js';
 import { updatePoint } from '../utils/common.js';
-import { SortType } from '../mock/const.js';
+import { SortType } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 
 export default class PresenterMain {
   #presenterContainer = null;
-  #destinationModel = null;
-  #offersModel = null;
   #pointsModel = null;
   #points = null;
   #sortComponent = null;
@@ -18,25 +16,20 @@ export default class PresenterMain {
   #noEventsComponent = new NoEvents();
   #presentersPoint = new Map();
   #currentSortType = SortType.DAY;
-  #sourcedPoints = [];
-
-  constructor ({presenterContainer, destinationModel, offersModel, pointsModel}) {
+  //#sourcedPoints = [];
+  constructor ({presenterContainer, pointsModel}) {
     this.#presenterContainer = presenterContainer;
-    this.#destinationModel = destinationModel;
-    this.#offersModel = offersModel;
     this.#pointsModel = pointsModel;
   }
 
   init() {
     this.#points = [...this.#pointsModel.points].sort(sortEventsByDate);
-    this.#sourcedPoints = [...this.#pointsModel.points].sort(sortEventsByDate);
     this.#renderSort();
     this.#renderMain();
   }
 
   #handlePointChange = (updatedPoint) => {
     this.#points = updatePoint(this.#points, updatedPoint);
-    this.#sourcedPoints = updatePoint(this.#sourcedPoints, updatedPoint);
     this.#presentersPoint.get(updatedPoint.id).init(updatedPoint);
   };
 
@@ -51,7 +44,7 @@ export default class PresenterMain {
         this.#points.reverse();
         break;
       default:
-        this.#points = this.#sourcedPoints;
+        this.#points.sort(sortEventsByDate);
     }
 
     this.#currentSortType = sortType;
@@ -89,8 +82,7 @@ export default class PresenterMain {
 
   #renderPoint(point) {
     const presenterPoint = new PresenterPoint({
-      destinationModel: this.#destinationModel,
-      offersModel: this.#offersModel,
+      pointsModel: this.#pointsModel,
       eventsListComponent: this.#eventsListComponent,
       onDataChange: this.#handlePointChange,
       onModeChange: this.#handleModeChange

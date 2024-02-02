@@ -9,11 +9,8 @@ const Mode = {
 };
 
 export default class PresenterPoint {
-  #destinationModel = null;
-  #offersModel = null;
+  #pointsModel = null;
   #eventsListComponent = null;
-  #offers = null;
-  #destination = null;
   #handleModeChange = null;
 
   #pointComponent = null;
@@ -24,35 +21,32 @@ export default class PresenterPoint {
 
   #handleDataChange = null;
 
-  constructor({destinationModel, offersModel, eventsListComponent, onDataChange, onModeChange}) {
-    this.#destinationModel = destinationModel;
-    this.#offersModel = offersModel;
+  constructor({pointsModel, eventsListComponent, onDataChange, onModeChange}) {
+    this.#pointsModel = pointsModel;
     this.#eventsListComponent = eventsListComponent;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
 
   init(point) {
-    this.#point = point;
-
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
-    this.#offers = this.#offersModel.getByType(this.#point.type);
-    this.#destination = this.#destinationModel.getById(this.#point.destination);
+    this.#point = {...point,
+      offersAll: this.#pointsModel.offers,
+      offersByType: this.#pointsModel.getByOffersType(point.type),
+      destinationsAll: this.#pointsModel.destinations,
+      destinationById: this.#pointsModel.getByDestinationId(point.destination),
+    };
 
     this.#pointComponent = new Event({
       point: this.#point,
-      offers: this.#offers,
-      destination: this.#destination,
       onClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#pointEditComponent = new EditablePoint({
       point: this.#point,
-      offers: this.#offers,
-      destination:  this.#destination,
       onClick: this.#handleFormClose,
       onFormSubmit: this.#handleFormSubmit,
     });
@@ -76,6 +70,7 @@ export default class PresenterPoint {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointEditComponent.reset(this.#point);
       this.#replaceFormToEvent();
     }
   }
@@ -101,7 +96,7 @@ export default class PresenterPoint {
   #escKeyDownHandler = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      this.#replaceFormToEvent();
+      this.#handleFormClose();
     }
   };
 
@@ -114,6 +109,7 @@ export default class PresenterPoint {
   };
 
   #handleFormClose = () => { //закрываем форму без сохранения
+    this.#pointEditComponent.reset(this.#point);
     this.#replaceFormToEvent();
   };
 

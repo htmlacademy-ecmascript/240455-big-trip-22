@@ -2,7 +2,7 @@ import { render, remove, RenderPosition } from '../framework/render.js';
 import TripInfo from '../view/trip-info.js';
 import TripInfoContent from '../view/trip-info-content.js';
 import TripCost from '../view/trip-cost.js';
-import Filters from '../view/filters.js';
+import FilterPresenter from '../presenter/presenter-filter.js';
 import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
@@ -10,16 +10,9 @@ import PresenterPoint from './presenter-point.js';
 import { SortType, UpdateType, UserAction } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 
-const filters = [
-  {
-    type: 'everything',
-    count: 0,
-  },
-];
-
 export default class PresenterMain {
   #presenterTripMain = null;
-  #presenterFilters = null;
+  #filtersContainer = null;
 
   #tripInfoComponent = new TripInfo();
   #tripInfoMainComponent = new TripInfoContent();
@@ -35,10 +28,9 @@ export default class PresenterMain {
   #presentersPoint = new Map();
   #currentSortType = SortType.DAY;
 
-  constructor ({presenterTripMain, presenterFilters, presenterContainer, pointsModel, filterModel}) {
+  constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, filterModel}) {
     this.#presenterTripMain = presenterTripMain;
-    this.#presenterFilters = presenterFilters;
-
+    this.#filtersContainer = filtersContainer;
     this.#presenterContainer = presenterContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
@@ -56,18 +48,21 @@ export default class PresenterMain {
     return [...this.#pointsModel.points].sort(sortEventsByDate);
   }
 
+
+  #renderFilters() {
+    const filterPresenter = new FilterPresenter({
+      filterContainer: this.#filtersContainer,
+      filterModel: this.#filterModel,
+      pointsModel: this.#pointsModel
+    });
+    filterPresenter.init();
+  }
+
   init() {
     render(this.#tripInfoComponent, this.#presenterTripMain, RenderPosition.AFTERBEGIN); //инфо
     render(this.#tripInfoMainComponent, this.#tripInfoComponent.element); //основная инфо
     render(this.#tripInfoCostComponent, this.#tripInfoComponent.element); //цена
-
-    render(new Filters({
-      filters,
-      currentFilterType: 'everything',
-      onFilterTypeChange: () => {}
-    }), this.#presenterFilters);
-
-
+    this.#renderFilters();
     this.#renderMain();
   }
 

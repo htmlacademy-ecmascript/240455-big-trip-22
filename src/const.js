@@ -66,9 +66,6 @@ const FilterType = {
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
-  DAY: 'day',
-  TIME: 'time',
-  PRICE: 'price',
 };
 
 const SortType = {

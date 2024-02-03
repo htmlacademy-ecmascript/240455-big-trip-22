@@ -9,10 +9,9 @@ const filterModel = new FilterModel();
 const siteTripMainContainer = document.querySelector('.trip-main');
 const siteFiltersContainer = document.querySelector('.trip-controls__filters');
 const siteTripEventsContainer = document.querySelector('.trip-events');
-
 const presenterMain = new PresenterMain({
   presenterTripMain: siteTripMainContainer,
-  presenterFilters: siteFiltersContainer,
+  filtersContainer: siteFiltersContainer,
   presenterContainer: siteTripEventsContainer,
   pointsModel,
   filterModel

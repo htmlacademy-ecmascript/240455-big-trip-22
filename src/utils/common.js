@@ -22,7 +22,6 @@ function getRandomInteger (min, max) {
   return Math.floor(result);
 }
 
-
 //написание слова с прописной буквы
 function ucFirst(str) {
   if (!str) {

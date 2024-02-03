@@ -121,7 +121,7 @@ export default class PresenterPoint {
   #handleFormSubmit = (point) => { //сохраняем форму
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
-      UpdateType.MAJOR,
+      UpdateType.MINOR,
       point,
     );
     this.#replaceFormToEvent();

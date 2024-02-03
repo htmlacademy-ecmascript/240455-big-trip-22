@@ -1,4 +1,8 @@
-import { render, remove } from '../framework/render.js';
+import { render, remove, RenderPosition } from '../framework/render.js';
+import TripInfo from '../view/trip-info.js';
+import TripInfoContent from '../view/trip-info-content.js';
+import TripCost from '../view/trip-cost.js';
+import Filters from '../view/filters.js';
 import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
@@ -6,7 +10,23 @@ import PresenterPoint from './presenter-point.js';
 import { SortType, UpdateType, UserAction } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 
+const filters = [
+  {
+    type: 'everything',
+    count: 0,
+  },
+];
+
 export default class PresenterMain {
+  #presenterTripMain = null;
+  #presenterFilters = null;
+
+  #tripInfoComponent = new TripInfo();
+  #tripInfoMainComponent = new TripInfoContent();
+  #tripInfoCostComponent = new TripCost();
+
+  #filterModel = null;
+
   #presenterContainer = null;
   #pointsModel = null;
   #sortComponent = null;
@@ -15,9 +35,13 @@ export default class PresenterMain {
   #presentersPoint = new Map();
   #currentSortType = SortType.DAY;
 
-  constructor ({presenterContainer, pointsModel}) {
+  constructor ({presenterTripMain, presenterFilters, presenterContainer, pointsModel, filterModel}) {
+    this.#presenterTripMain = presenterTripMain;
+    this.#presenterFilters = presenterFilters;
+
     this.#presenterContainer = presenterContainer;
     this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
   }
@@ -33,6 +57,17 @@ export default class PresenterMain {
   }
 
   init() {
+    render(this.#tripInfoComponent, this.#presenterTripMain, RenderPosition.AFTERBEGIN); //инфо
+    render(this.#tripInfoMainComponent, this.#tripInfoComponent.element); //основная инфо
+    render(this.#tripInfoCostComponent, this.#tripInfoComponent.element); //цена
+
+    render(new Filters({
+      filters,
+      currentFilterType: 'everything',
+      onFilterTypeChange: () => {}
+    }), this.#presenterFilters);
+
+
     this.#renderMain();
   }
 
@@ -62,7 +97,7 @@ export default class PresenterMain {
         this.#renderMain();
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении сортировки/фильтра)
+        // - обновить всю доску (например, при переключении фильтра)
         this.#clearMain({resetSortType: true});
         this.#renderMain();
         break;

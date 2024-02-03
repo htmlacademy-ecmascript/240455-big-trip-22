@@ -8,7 +8,7 @@ import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
 import PresenterPoint from './presenter-point.js';
 import {filter} from '../utils/filter.js';
-import { SortType, UpdateType, UserAction } from '../const.js';
+import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 
 export default class PresenterMain {
@@ -25,9 +25,11 @@ export default class PresenterMain {
   #pointsModel = null;
   #sortComponent = null;
   #eventsListComponent = new EventsList(); //список ul
-  #noEventsComponent = new NoEvents();
+  //#noEventsComponent = new NoEvents();
+  #noEventsComponent = null;
   #presentersPoint = new Map();
   #currentSortType = SortType.DAY;
+  #filterType = FilterType.EVERYTHING;
 
   constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, filterModel}) {
     this.#presenterTripMain = presenterTripMain;
@@ -41,9 +43,9 @@ export default class PresenterMain {
   }
 
   get points() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filter[filterType](points);
+    const filteredPoints = filter[this.#filterType](points);
 
     switch (this.#currentSortType) {
       case SortType.TIME:
@@ -129,6 +131,10 @@ export default class PresenterMain {
   }
 
   #renderNoPoints() {
+    this.#noEventsComponent = new NoEvents({
+      filterType: this.#filterType
+    });
+    console.log(this.#filterType);
     remove(this.#sortComponent);
     render(this.#noEventsComponent, this.#presenterContainer); //нет точек маршрута
   }
@@ -170,6 +176,10 @@ export default class PresenterMain {
 
     remove(this.#sortComponent);
     remove(this.#noEventsComponent);
+
+    if (this.#noEventsComponent) {
+      remove(this.#noEventsComponent);
+    }
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;

@@ -7,6 +7,7 @@ import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
 import PresenterPoint from './presenter-point.js';
+import {filter} from '../utils/filter.js';
 import { SortType, UpdateType, UserAction } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 
@@ -36,16 +37,21 @@ export default class PresenterMain {
     this.#filterModel = filterModel;
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
+    const filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
+    const filteredPoints = filter[filterType](points);
+
     switch (this.#currentSortType) {
       case SortType.TIME:
-        return [...this.#pointsModel.points].sort(sortEventsByTime).reverse();
+        return filteredPoints.sort(sortEventsByTime).reverse();
       case SortType.PRICE:
-        return [...this.#pointsModel.points].sort(sortEventsByPrice).reverse();
+        return filteredPoints.sort(sortEventsByPrice).reverse();
     }
-    return [...this.#pointsModel.points].sort(sortEventsByDate);
+    return filteredPoints.sort(sortEventsByDate);
   }
 
 

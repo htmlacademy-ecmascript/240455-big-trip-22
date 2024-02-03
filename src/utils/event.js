@@ -66,4 +66,14 @@ function sortEventsByPrice(eventA, eventB) {
   return eventA.price - eventB.price;
 }
 
-export {humanizeDate, isEventExpired, isEventFuture, isEventPresent, DATE_FORMAT_FIRST, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, DATE_FORMAT_FOURTH, TIME_FORMAT, sortEventsByTime, sortEventsByPrice, getEventDuration, sortEventsByDate };
+//сравнение дат
+function isDatesEqual(dateA, dateB) {
+  return dayjs(dateA).isSame(dateB);
+}
+
+//сравнение цен
+function isPriceEqual(priceA, priceB) {
+  return dayjs(priceA).isSame(priceB);
+}
+
+export {humanizeDate, isEventExpired, isEventFuture, isEventPresent, DATE_FORMAT_FIRST, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, DATE_FORMAT_FOURTH, TIME_FORMAT, sortEventsByTime, sortEventsByPrice, getEventDuration, sortEventsByDate, isDatesEqual, isPriceEqual };

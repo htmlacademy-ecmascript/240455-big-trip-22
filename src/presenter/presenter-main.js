@@ -58,8 +58,8 @@ export default class PresenterMain {
         this.#presentersPoint.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        this.#clearPointsList();
-        this.#renderPointsList();
+        this.#clearMain();
+        this.#renderMain();
         break;
       case UpdateType.MAJOR:
         // - обновить всю доску (например, при переключении сортировки/фильтра)
@@ -93,6 +93,7 @@ export default class PresenterMain {
   }
 
   #renderNoPoints() {
+    remove(this.#sortComponent);
     render(this.#noEventsComponent, this.#presenterContainer); //нет точек маршрута
   }
 
@@ -112,19 +113,6 @@ export default class PresenterMain {
     this.#presentersPoint.set(point.id, presenterPoint);
   }
 
-  #renderPointsList() {
-    if (this.points.length < 1) {
-      this.#renderNoPoints();
-      return;
-    }
-
-    this.#renderList();
-
-    for (let i = 0; i < this.points.length; i++) {
-      this.#renderPoint(this.points[i]);
-    }
-  }
-
   #renderMain() {
     if (this.points.length < 1) {
       this.#renderNoPoints();
@@ -138,11 +126,6 @@ export default class PresenterMain {
     for (let i = 0; i < this.points.length; i++) {
       this.#renderPoint(this.points[i]);
     }
-  }
-
-  #clearPointsList() {
-    this.#presentersPoint.forEach((presenter) => presenter.destroy());
-    this.#presentersPoint.clear();
   }
 
   #clearMain({resetSortType = false} = {}) {

@@ -1,5 +1,5 @@
 const PHOTOS_COUNT = 5;
-const POINTS_COUNT = 10;
+const POINTS_COUNT = 3;
 const OFFER_COUNT = 5;
 
 const TYPES = [

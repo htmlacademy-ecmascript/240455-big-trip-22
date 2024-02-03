@@ -141,13 +141,15 @@ function createEditablePoint(point, offers, destinationsAll, destination) {
 export default class EditablePoint extends AbstractStatefulView {
   #handleClick = null;
   #handleFormSubmit = null;
+  #handleDeleteClick = null;
   #datepicker = null;
 
-  constructor ({point = BLANK_POINT, onClick, onFormSubmit}) {
+  constructor ({point = BLANK_POINT, onClick, onFormSubmit, onDeleteClick}) {
     super();
     this._setState(EditablePoint.parsePointToState(point));
     this.#handleClick = onClick;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -194,6 +196,7 @@ export default class EditablePoint extends AbstractStatefulView {
     this.element.querySelectorAll('.event__offer-checkbox').forEach((element) => {
       element.addEventListener('change', this.#eventOfferChangeHandler);
     });
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
 
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
@@ -279,6 +282,10 @@ export default class EditablePoint extends AbstractStatefulView {
     );
   }
 
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(EditablePoint.parseStateToPoint(this._state));
+  };
 
   static parsePointToState(point) {
     return {...point };

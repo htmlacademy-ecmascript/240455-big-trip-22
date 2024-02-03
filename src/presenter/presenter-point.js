@@ -1,5 +1,6 @@
 import { render, replace, remove } from '../framework/render.js';
 import { isEscapeKey } from '../utils/common.js';
+import { isDatesEqual, isPriceEqual } from '../utils/event.js';
 import EditablePoint from '../view/editable-point.js';
 import Event from '../view/event.js';
 import {UserAction, UpdateType} from '../const.js';
@@ -50,6 +51,7 @@ export default class PresenterPoint {
       point: this.#point,
       onClick: this.#handleFormClose,
       onFormSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick,
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -118,9 +120,25 @@ export default class PresenterPoint {
     this.#replaceFormToEvent();
   };
 
-  #handleFormSubmit = (point) => { //сохраняем форму
+  #handleFormSubmit = (update) => {
+    // Проверяем, поменялись ли в задаче данные, которые попадают под фильтрацию,
+    // а значит требуют перерисовки списка - если таких нет, это PATCH-обновление
+    const isMinorUpdate =
+      !isDatesEqual(this.#point.dateFrom, update.dateFrom) ||
+      !isDatesEqual(this.#point.dateTo, update.dateTo) ||
+      !isPriceEqual(this.#point.price, update.price);
+
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update,
+    );
+    this.#replaceFormToEvent();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
       UpdateType.MINOR,
       point,
     );

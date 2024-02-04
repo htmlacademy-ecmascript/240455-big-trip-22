@@ -23,4 +23,4 @@ const generatePoint = (type, offers, destinationId) => ({
   price: getRandomInteger(20, 100),
 });
 
-export { generatePoint };
+export { generatePoint, generatePointId};

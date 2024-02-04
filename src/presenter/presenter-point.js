@@ -1,7 +1,7 @@
 import { render, replace, remove } from '../framework/render.js';
 import { isEscapeKey } from '../utils/common.js';
 import { isDatesEqual, isPriceEqual } from '../utils/event.js';
-import EditablePoint from '../view/editable-point.js';
+import EditableEvent from '../view/editable-event.js';
 import Event from '../view/event.js';
 import {UserAction, UpdateType} from '../const.js';
 
@@ -47,11 +47,11 @@ export default class PresenterPoint {
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
-    this.#pointEditComponent = new EditablePoint({
+    this.#pointEditComponent = new EditableEvent({
       point: this.#point,
-      onClick: this.#handleFormClose,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
+      onClick: this.#handleFormClose,
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {

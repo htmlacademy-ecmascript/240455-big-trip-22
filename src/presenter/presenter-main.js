@@ -2,6 +2,7 @@ import { render, remove, RenderPosition } from '../framework/render.js';
 import TripInfo from '../view/trip-info.js';
 import TripInfoContent from '../view/trip-info-content.js';
 import TripCost from '../view/trip-cost.js';
+import NewPointPresenter from './new-point-presenter.js';
 import FilterPresenter from '../presenter/presenter-filter.js';
 import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
@@ -25,13 +26,13 @@ export default class PresenterMain {
   #pointsModel = null;
   #sortComponent = null;
   #eventsListComponent = new EventsList(); //список ul
-  //#noEventsComponent = new NoEvents();
   #noEventsComponent = null;
   #presentersPoint = new Map();
+  #newPointPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
-  constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, filterModel}) {
+  constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#presenterTripMain = presenterTripMain;
     this.#filtersContainer = filtersContainer;
     this.#presenterContainer = presenterContainer;
@@ -40,7 +41,15 @@ export default class PresenterMain {
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
+
+    this.#newPointPresenter = new NewPointPresenter({
+      pointsModel: this.#pointsModel,
+      eventsListContainer:  this.#eventsListComponent.element,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewPointDestroy
+    });
   }
+
 
   get points() {
     this.#filterType = this.#filterModel.filter;
@@ -56,22 +65,18 @@ export default class PresenterMain {
     return filteredPoints.sort(sortEventsByDate);
   }
 
-
-  #renderFilters() {
-    const filterPresenter = new FilterPresenter({
-      filterContainer: this.#filtersContainer,
-      filterModel: this.#filterModel,
-      pointsModel: this.#pointsModel
-    });
-    filterPresenter.init();
-  }
-
   init() {
     render(this.#tripInfoComponent, this.#presenterTripMain, RenderPosition.AFTERBEGIN); //инфо
     render(this.#tripInfoMainComponent, this.#tripInfoComponent.element); //основная инфо
     render(this.#tripInfoCostComponent, this.#tripInfoComponent.element); //цена
     this.#renderFilters();
     this.#renderMain();
+  }
+
+  createPoint() {
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newPointPresenter.init();
   }
 
   #handleViewAction = (actionType, updateType, update) => {
@@ -118,15 +123,24 @@ export default class PresenterMain {
   };
 
   #handleModeChange = () => {
+    this.#newPointPresenter.destroy();
     this.#presentersPoint.forEach((presenter) => presenter.resetView());
   };
+
+  #renderFilters() {
+    const filterPresenter = new FilterPresenter({
+      filterContainer: this.#filtersContainer,
+      filterModel: this.#filterModel,
+      pointsModel: this.#pointsModel
+    });
+    filterPresenter.init();
+  }
 
   #renderSort() {
     this.#sortComponent = new Sorting({
       currentSortType: this.#currentSortType,
       onSortTypeChange: this.#handleSortTypeChange
     });
-
     render(this.#sortComponent, this.#presenterContainer); //сортировка
   }
 
@@ -134,7 +148,6 @@ export default class PresenterMain {
     this.#noEventsComponent = new NoEvents({
       filterType: this.#filterType
     });
-    console.log(this.#filterType);
     remove(this.#sortComponent);
     render(this.#noEventsComponent, this.#presenterContainer); //нет точек маршрута
   }
@@ -171,6 +184,7 @@ export default class PresenterMain {
   }
 
   #clearMain({resetSortType = false} = {}) {
+    this.#newPointPresenter.destroy();
     this.#presentersPoint.forEach((presenter) => presenter.destroy());
     this.#presentersPoint.clear();
 

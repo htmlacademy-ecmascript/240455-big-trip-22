@@ -114,7 +114,7 @@ function createEditableEvent(point, offersByType, destinationsAll, destinationBy
                     <span class="visually-hidden">Price</span>
                     &euro; ${price}
                   </label>
-                  <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+                  <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="">
                 </div>
 
                 <button class="event__save-btn  btn  btn--blue" type="submit"${isSubmitDisabled ? ' disabled' : ''}>Save</button>
@@ -190,6 +190,7 @@ export default class EditableEvent extends AbstractStatefulView {
       element.addEventListener('change', this.#eventOfferChangeHandler);
     });
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
 
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
@@ -228,6 +229,21 @@ export default class EditableEvent extends AbstractStatefulView {
       this.updateElement({
         destination: destination.id,
         destinationById: destination,
+      });
+    }
+  };
+
+  #priceChangeHandler = (evt) => {
+    evt.preventDefault();
+
+    const priceOriginal = this._state.price;
+    const price = Math.round(evt.target.value);
+
+    if (price === undefined) {
+      evt.target.value = priceOriginal;
+    } else {
+      this.updateElement({
+        price: price,
       });
     }
   };

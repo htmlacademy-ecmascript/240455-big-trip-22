@@ -1,5 +1,5 @@
 const PHOTOS_COUNT = 5;
-const POINTS_COUNT = 10;
+const POINTS_COUNT = 3;
 const OFFER_COUNT = 5;
 
 const TYPES = [
@@ -66,9 +66,6 @@ const FilterType = {
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past',
-  DAY: 'day',
-  TIME: 'time',
-  PRICE: 'price',
 };
 
 const SortType = {
@@ -79,4 +76,16 @@ const SortType = {
   OFFERS: 'offers',
 };
 
-export { TYPES, OFFERS, CITIES, DESCRIPTIONS, PHOTOS_COUNT, POINTS_COUNT, OFFER_COUNT, FilterType, SortType };
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export { TYPES, OFFERS, CITIES, DESCRIPTIONS, PHOTOS_COUNT, POINTS_COUNT, OFFER_COUNT, FilterType, SortType, UserAction, UpdateType };

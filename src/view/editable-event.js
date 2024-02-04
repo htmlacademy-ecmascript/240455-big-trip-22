@@ -223,7 +223,7 @@ export default class EditableEvent extends AbstractStatefulView {
     const destination = this._state.destinationsAll.find((item) => item.name === evt.target.value);
 
     if (destination === undefined) {
-      evt.target.value = destinationOriginal.name;
+      evt.target.value = destinationOriginal.name || '';
     } else {
       this.updateElement({
         destination: destination.id,

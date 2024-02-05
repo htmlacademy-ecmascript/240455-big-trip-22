@@ -1,10 +1,17 @@
 import PresenterMain from './presenter/presenter-main.js';
-import MockService from './service/mock-service.js';
-import PointsModel from './model/point-model.js';
+//import MockService from './service/mock-service.js';
+import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
+import PointsApiService from './points-api-service.js';
 
-const mockService = new MockService();
-const pointsModel = new PointsModel(mockService);
+const AUTHORIZATION = 'Basic G5flmyeZ9tPBUhDi';
+const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
+
+//const mockService = new MockService();
+//const pointsModel = new PointsModel(mockService);
+const pointsModel = new PointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
 const filterModel = new FilterModel();
 const siteTripMainContainer = document.querySelector('.trip-main');
 const siteFiltersContainer = document.querySelector('.trip-controls__filters');

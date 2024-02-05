@@ -1,18 +1,32 @@
 import Observable from '../framework/observable.js';
 
 export default class PointsModel extends Observable {
+  #pointsApiService = null;
   #service = null;
   #points = null;
   #destinations = null;
   #offers = null;
 
-  constructor(service) {
+  constructor({pointsApiService}) {
     super();
-    this.#service = service;
-    this.#points = this.#service.points;
-    this.#destinations = this.#service.destinations;
-    this.#offers = this.#service.offers;
+    this.#pointsApiService = pointsApiService;
+
+    this.#pointsApiService.points.then((points) => {
+      console.log(points);
+      // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
+      // а ещё на сервере используется snake_case, а у нас camelCase.
+      // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
+      // Есть вариант получше - паттерн "Адаптер"
+    });
   }
+
+  // constructor(service) {
+  //   super();
+  //   this.#service = service;
+  //   this.#points = this.#service.points;
+  //   this.#destinations = this.#service.destinations;
+  //   this.#offers = this.#service.offers;
+  // }
 
   get points() {
     return this.#points;

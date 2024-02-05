@@ -1,6 +1,6 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import EditableEvent from '../view/editable-event.js';
-import { generatePointId } from '../mock/point.js';
+// import { generatePointId } from '../mock/point.js';
 import {UserAction, UpdateType} from '../const.js';
 import { isEscapeKey } from '../utils/common.js';
 

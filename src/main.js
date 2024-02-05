@@ -40,4 +40,3 @@ function handleNewEventButtonClick() {
 
 presenterMain.init();
 pointsModel.init();
-

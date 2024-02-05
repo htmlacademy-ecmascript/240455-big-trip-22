@@ -12,21 +12,17 @@ export default class PointsModel extends Observable {
     this.#pointsApiService = pointsApiService;
 
     this.#pointsApiService.points.then((points) => {
-      console.log(points);
-      // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
-      // а ещё на сервере используется snake_case, а у нас camelCase.
-      // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
-      // Есть вариант получше - паттерн "Адаптер"
+      console.log(points.map(this.#adaptPointToClient));
+    });
+
+    this.#pointsApiService.offers.then((offers) => {
+      console.log(offers);
+    });
+
+    this.#pointsApiService.destinations.then((destinations) => {
+      console.log(destinations);
     });
   }
-
-  // constructor(service) {
-  //   super();
-  //   this.#service = service;
-  //   this.#points = this.#service.points;
-  //   this.#destinations = this.#service.destinations;
-  //   this.#offers = this.#service.offers;
-  // }
 
   get points() {
     return this.#points;
@@ -88,5 +84,22 @@ export default class PointsModel extends Observable {
     ];
 
     this._notify(updateType);
+  }
+
+  #adaptPointToClient(point) {
+    const adaptedPoint = {...point,
+      price: point['base_price'],
+      dateFrom: new Date(point['date_from']),
+      dateTo: new Date(point['date_to']),
+      isFavorite: point['is_favorite'],
+    };
+
+    // Ненужные ключи мы удаляем
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['is_favorite'];
+
+    return adaptedPoint;
   }
 }

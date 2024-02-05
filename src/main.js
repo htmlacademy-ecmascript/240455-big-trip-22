@@ -12,6 +12,7 @@ const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 const pointsModel = new PointsModel({
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
 });
+
 const filterModel = new FilterModel();
 const siteTripMainContainer = document.querySelector('.trip-main');
 const siteFiltersContainer = document.querySelector('.trip-controls__filters');

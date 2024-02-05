@@ -2,8 +2,8 @@ import Observable from '../framework/observable.js';
 
 export default class PointsModel extends Observable {
   #pointsApiService = null;
-  #service = null;
-  #points = null;
+  //#service = null;
+  #points = [];
   #destinations = null;
   #offers = null;
 
@@ -11,17 +11,17 @@ export default class PointsModel extends Observable {
     super();
     this.#pointsApiService = pointsApiService;
 
-    this.#pointsApiService.points.then((points) => {
-      console.log(points.map(this.#adaptPointToClient));
-    });
+    // this.#pointsApiService.points.then((points) => {
+    //   console.log(points.map(this.#adaptPointToClient));
+    // });
 
-    this.#pointsApiService.offers.then((offers) => {
-      console.log(offers);
-    });
+    // this.#pointsApiService.offers.then((offers) => {
+    //   console.log(offers);
+    // });
 
-    this.#pointsApiService.destinations.then((destinations) => {
-      console.log(destinations);
-    });
+    // this.#pointsApiService.destinations.then((destinations) => {
+    //   console.log(destinations);
+    // });
   }
 
   get points() {
@@ -44,6 +44,19 @@ export default class PointsModel extends Observable {
   getByOffersType(type) {
     return this.#offers
       .find((offer) => offer.type === type).offers;
+  }
+
+  async init() {
+    try {
+      const points = await this.#pointsApiService.points;
+      this.#points = points.map(this.#adaptPointToClient);
+      this.#offers = await this.#pointsApiService.offers;
+      this.#destinations = await this.#pointsApiService.destinations;
+    } catch(err) {
+      this.#points = [];
+      this.#offers = [];
+      this.#destinations = [];
+    }
   }
 
   updatePoint(updateType, update) {

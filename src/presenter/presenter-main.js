@@ -7,6 +7,7 @@ import FilterPresenter from '../presenter/presenter-filter.js';
 import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
+import Loading from '../view/loading.js';
 import PresenterPoint from './presenter-point.js';
 import {filter} from '../utils/filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
@@ -19,6 +20,7 @@ export default class PresenterMain {
   #tripInfoComponent = new TripInfo();
   #tripInfoMainComponent = new TripInfoContent();
   #tripInfoCostComponent = new TripCost();
+  #loadingComponent = new Loading();
 
   #filterModel = null;
 
@@ -31,6 +33,7 @@ export default class PresenterMain {
   #newPointPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#presenterTripMain = presenterTripMain;
@@ -109,6 +112,11 @@ export default class PresenterMain {
         this.#clearMain({resetSortType: true});
         this.#renderMain();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderMain();
+        break;
     }
   };
 
@@ -144,6 +152,11 @@ export default class PresenterMain {
     render(this.#sortComponent, this.#presenterContainer); //сортировка
   }
 
+  #renderLoading() {
+    remove(this.#sortComponent);
+    render(this.#loadingComponent, this.#presenterContainer); //нет точек маршрута
+  }
+
   #renderNoPoints() {
     this.#noEventsComponent = new NoEvents({
       filterType: this.#filterType
@@ -174,6 +187,11 @@ export default class PresenterMain {
       return;
     }
 
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     this.#renderSort();
 
     this.#renderList();
@@ -189,6 +207,7 @@ export default class PresenterMain {
     this.#presentersPoint.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
     remove(this.#noEventsComponent);
 
     if (this.#noEventsComponent) {

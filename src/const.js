@@ -86,6 +86,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 export { TYPES, OFFERS, CITIES, DESCRIPTIONS, PHOTOS_COUNT, POINTS_COUNT, OFFER_COUNT, FilterType, SortType, UserAction, UpdateType };

@@ -1,4 +1,5 @@
 import Observable from '../framework/observable.js';
+import {UpdateType} from '../const.js';
 
 export default class PointsModel extends Observable {
   #pointsApiService = null;
@@ -11,17 +12,7 @@ export default class PointsModel extends Observable {
     super();
     this.#pointsApiService = pointsApiService;
 
-    // this.#pointsApiService.points.then((points) => {
-    //   console.log(points.map(this.#adaptPointToClient));
-    // });
-
-    // this.#pointsApiService.offers.then((offers) => {
-    //   console.log(offers);
-    // });
-
-    // this.#pointsApiService.destinations.then((destinations) => {
-    //   console.log(destinations);
-    // });
+    this._notify(UpdateType.INIT);
   }
 
   get points() {

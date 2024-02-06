@@ -5,14 +5,16 @@ import PointsApiService from './points-api-service.js';
 const AUTHORIZATION = 'Basic G5flmyeZ9tPBUhDi';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
-const pointsModel = new PointsModel({
-  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
-});
-
 const siteTripMainContainer = document.querySelector('.trip-main');
 const siteFiltersContainer = document.querySelector('.trip-controls__filters');
 const siteTripEventsContainer = document.querySelector('.trip-events');
 const newEventButtonElement = document.querySelector('.trip-main__event-add-btn');
+
+const pointsModel = new PointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
+  newEventButtonElement,
+});
+
 newEventButtonElement.addEventListener('click', handleNewEventButtonClick);
 
 const presenterMain = new PresenterMain({
@@ -33,5 +35,8 @@ function handleNewEventButtonClick() {
 }
 
 presenterMain.init();
-pointsModel.init();
+pointsModel.init()
+  .finally(() => {
+    newEventButtonElement.disabled = false;
+  });
 

@@ -40,7 +40,7 @@ export default class PointsModel extends Observable {
     try {
       this.#newEventButtonElement.disabled = true;
       const points = await this.#pointsApiService.points;
-      this.#points = points.map(this.#adaptPointToClient);
+      this.#points = points.map(this.#adaptToClient);
       this.#offers = await this.#pointsApiService.offers;
       this.#destinations = await this.#pointsApiService.destinations;
     } catch(err) {
@@ -60,7 +60,8 @@ export default class PointsModel extends Observable {
 
     try {
       const response = await this.#pointsApiService.updatePoint(update);
-      const updatedPoint = this.#adaptPointToClient(response);
+      const updatedPoint = this.#adaptToClient(response);
+
       this.#points = [
         ...this.#points.slice(0, index),
         updatedPoint,
@@ -68,14 +69,14 @@ export default class PointsModel extends Observable {
       ];
       this._notify(updateType, updatedPoint);
     } catch(err) {
-      throw new Error('Can\'t update task');
+      throw new Error('Can\'t update point');
     }
   }
 
   async addPoint(updateType, update) {
     try {
       const response = await this.#pointsApiService.addPoint(update);
-      const newPoint = this.#adaptPointToClient(response);
+      const newPoint = this.#adaptToClient(response);
       this.#points = [newPoint, ...this.#points];
       this._notify(updateType, newPoint);
     } catch(err) {
@@ -102,7 +103,7 @@ export default class PointsModel extends Observable {
     }
   }
 
-  #adaptPointToClient(point) {
+  #adaptToClient(point) {
     const adaptedPoint = {...point,
       price: point['base_price'],
       dateFrom: new Date(point['date_from']),

@@ -8,14 +8,14 @@ const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 const siteTripMainContainer = document.querySelector('.trip-main');
 const siteFiltersContainer = document.querySelector('.trip-controls__filters');
 const siteTripEventsContainer = document.querySelector('.trip-events');
-const newEventButtonElement = document.querySelector('.trip-main__event-add-btn');
+const newEventButtonContainer = document.querySelector('.trip-main__event-add-btn');
 
 const pointsModel = new PointsModel({
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
-  newEventButtonElement,
+  newEventButtonContainer,
 });
 
-newEventButtonElement.addEventListener('click', handleNewEventButtonClick);
+newEventButtonContainer.addEventListener('click', handleNewEventButtonClick);
 
 const presenterMain = new PresenterMain({
   presenterTripMain: siteTripMainContainer,
@@ -26,17 +26,17 @@ const presenterMain = new PresenterMain({
 });
 
 function handleNewPointFormClose() {
-  newEventButtonElement.disabled = false;
+  newEventButtonContainer.disabled = false;
 }
 
 function handleNewEventButtonClick() {
   presenterMain.createPoint();
-  newEventButtonElement.disabled = true;
+  newEventButtonContainer.disabled = true;
 }
 
 presenterMain.init();
 pointsModel.init()
   .finally(() => {
-    newEventButtonElement.disabled = false;
+    newEventButtonContainer.disabled = false;
   });
 

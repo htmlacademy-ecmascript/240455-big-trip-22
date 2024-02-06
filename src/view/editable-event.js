@@ -1,3 +1,4 @@
+import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { ucFirst } from '../utils/common.js';
 import { humanizeDate, DATE_FORMAT_FIRST } from '../utils/event.js';
@@ -33,7 +34,7 @@ function createOffersTemplate(offersByType, pointsOffers) {
 }
 
 function createDestinationsList(destinationsList, destinationName) {
-  return `<input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationName !== undefined && destinationName !== '' ? destinationName : ''}" list="destination-list-1">
+  return `<input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(String(destinationName))}" list="destination-list-1" required>
     <datalist id="destination-list-1">
     ${destinationsList.map((destination) =>
     `<option value="${destination.name}">${destination.name}</option>`).join('')}
@@ -62,9 +63,10 @@ function createPhotosTemplate(pictures) {
 function createEditableEvent(point, offersByType, destinationsAll, destinationById) {
 
   const { id, type, dateFrom, dateTo, price } = point;
-  const { name, description, pictures } = typeof destinationById !== 'undefined' && destinationById !== '' ? destinationById : '';
-  const destinationTemplate = typeof destinationById !== 'undefined' && destinationById !== '' ? (createDestinationTemplate({ name, description, pictures })) : '';
-  const destinationsListTemplate = createDestinationsList(destinationsAll, name);
+  const isExistDestinationById = destinationById !== undefined && destinationById !== '';
+  const { name, description, pictures } = isExistDestinationById ? destinationById : '';
+  const destinationTemplate = isExistDestinationById ? (createDestinationTemplate({ name, description, pictures })) : '';
+  const destinationsListTemplate = createDestinationsList(destinationsAll, name ? name : '');
 
   const dateFromHumanized = humanizeDate(dateFrom, DATE_FORMAT_FIRST);
   const dateToHumanized = humanizeDate(dateTo, DATE_FORMAT_FIRST);
@@ -72,7 +74,7 @@ function createEditableEvent(point, offersByType, destinationsAll, destinationBy
   const typesList = createTypesList(TYPES, type);
   const offersTemplate = createOffersTemplate(offersByType, point.offers);
 
-  const isSubmitDisabled = typeof name === 'undefined';
+  //const isSubmitDisabled = typeof name === 'undefined';
 
   const eventRollupBtn = point.id ? '<button class="event__rollup-btn" type="button"><span class="visually-hidden">Open event</span></button>' : '';
 
@@ -112,12 +114,12 @@ function createEditableEvent(point, offersByType, destinationsAll, destinationBy
                 <div class="event__field-group  event__field-group--price">
                   <label class="event__label" for="event-price-1">
                     <span class="visually-hidden">Price</span>
-                    &euro; ${price}
+                    &euro;
                   </label>
-                  <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="">
+                  <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${he.encode(String(price))}" min="1" max="100000" required>
                 </div>
 
-                <button class="event__save-btn  btn  btn--blue" type="submit"${isSubmitDisabled ? ' disabled' : ''}>Save</button>
+                <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
                 <button class="event__reset-btn" type="reset">${point.id ? 'Delete' : 'Cancel'}</button>
                 ${eventRollupBtn}
               </header>
@@ -220,38 +222,29 @@ export default class EditableEvent extends AbstractStatefulView {
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
 
-    const destinationOriginal = this._state.destinationById;
     const destination = this._state.destinationsAll.find((item) => item.name === evt.target.value);
+    const destinationId = destination ? destination.id : this._state.destination;
 
-    if (destination === undefined) {
-      evt.target.value = destinationOriginal.name || '';
-    } else {
-      this.updateElement({
-        destination: destination.id,
-        destinationById: destination,
-      });
-    }
+    this.updateElement({
+      destination: destinationId,
+      destinationById: destination,
+    });
   };
 
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
 
-    const priceOriginal = this._state.price;
     const price = Math.round(evt.target.value);
 
-    if (price === undefined) {
-      evt.target.value = priceOriginal;
-    } else {
-      this.updateElement({
-        price: price,
-      });
-    }
+    this.updateElement({
+      price: price,
+    });
   };
 
   #eventOfferChangeHandler = (evt) => {
     evt.preventDefault();
 
-    const id = (parseInt(evt.target.dataset.eventOfferId, 10));
+    const id = evt.target.dataset.eventOfferId;
 
     if (!this._state.offers.includes(id)) {
       this.updateElement({
@@ -265,8 +258,9 @@ export default class EditableEvent extends AbstractStatefulView {
   };
 
   #setDatepickerFrom() {
+    const input = this.element.querySelector('#event-start-time-1');
     this.#datepicker = flatpickr(
-      this.element.querySelector('#event-start-time-1'),
+      input,
       {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateFrom,
@@ -275,9 +269,11 @@ export default class EditableEvent extends AbstractStatefulView {
         onChange: this.#dateChangeHandlerFrom, // На событие flatpickr передаём наш колбэк
       },
     );
+    input.readOnly = false; //required работает
   }
 
   #setDatepickerTo() {
+    const input = this.element.querySelector('#event-end-time-1');
     this.#datepicker = flatpickr(
       this.element.querySelector('#event-end-time-1'),
       {
@@ -289,6 +285,7 @@ export default class EditableEvent extends AbstractStatefulView {
         onChange: this.#dateChangeHandlerTo, // На событие flatpickr передаём наш колбэк
       },
     );
+    input.readOnly = false; //required работает
   }
 
   #formDeleteClickHandler = (evt) => {

@@ -3,7 +3,7 @@ import EditableEvent from '../view/editable-event.js';
 import {UserAction, UpdateType} from '../const.js';
 import { isEscapeKey } from '../utils/common.js';
 
-export default class NewPointPresenter {
+export default class PresenterNewPoint {
   #pointsModel = null;
   #eventsListContainer = null;
   #handleDataChange = null;
@@ -46,7 +46,7 @@ export default class NewPointPresenter {
 
     render(this.#eventEditComponent, this.#eventsListContainer, RenderPosition.AFTERBEGIN);
 
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#handlEescKeyDown);
   }
 
   destroy() {
@@ -59,13 +59,14 @@ export default class NewPointPresenter {
     remove(this.#eventEditComponent);
     this.#eventEditComponent = null;
 
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#handlEescKeyDown);
   }
 
-  #handleFormSubmit = () => {
+  #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
+      {...point, isFavorite: false},
     );
     this.destroy();
   };
@@ -74,7 +75,7 @@ export default class NewPointPresenter {
     this.destroy();
   };
 
-  #escKeyDownHandler = (evt) => {
+  #handlEescKeyDown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       this.destroy();

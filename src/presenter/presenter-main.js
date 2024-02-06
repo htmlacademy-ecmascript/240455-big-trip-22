@@ -2,15 +2,15 @@ import { render, remove, RenderPosition } from '../framework/render.js';
 import TripInfo from '../view/trip-info.js';
 import TripInfoContent from '../view/trip-info-content.js';
 import TripCost from '../view/trip-cost.js';
-import NewPointPresenter from './new-point-presenter.js';
+import PresenterNewPoint from './presenter-new-point.js';
 import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
 import Loading from '../view/loading.js';
 import PresenterPoint from './presenter-point.js';
-import {filter} from '../utils/filter.js';
+import {filterBy} from '../utils/filterby.js';
 import FilterModel from '../model/filter-model.js';
-import FilterPresenter from '../presenter/presenter-filter.js';
+import PresenterFilter from '../presenter/presenter-filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 
@@ -42,7 +42,7 @@ export default class PresenterMain {
     this.#presenterContainer = presenterContainer;
     this.#pointsModel = pointsModel;
 
-    this.#newPointPresenter = new NewPointPresenter({
+    this.#newPointPresenter = new PresenterNewPoint({
       pointsModel: this.#pointsModel,
       eventsListContainer:  this.#eventsListComponent.element,
       onDataChange: this.#handleViewAction,
@@ -56,7 +56,7 @@ export default class PresenterMain {
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filter[this.#filterType](points);
+    const filteredPoints = filterBy[this.#filterType](points);
     switch (this.#currentSortType) {
       case SortType.TIME:
         return filteredPoints.sort(sortEventsByTime).reverse();
@@ -134,7 +134,7 @@ export default class PresenterMain {
   };
 
   #renderFilters() {
-    const filterPresenter = new FilterPresenter({
+    const filterPresenter = new PresenterFilter({
       filterContainer: this.#filtersContainer,
       filterModel: this.#filterModel,
       pointsModel: this.#pointsModel
@@ -194,9 +194,7 @@ export default class PresenterMain {
 
     this.#renderList();
 
-    for (let i = 0; i < this.points.length; i++) {
-      this.#renderPoint(this.points[i]);
-    }
+    this.points.forEach((point) => this.#renderPoint(point));
   }
 
   #clearMain({resetSortType = false} = {}) {

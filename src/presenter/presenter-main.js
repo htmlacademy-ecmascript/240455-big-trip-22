@@ -96,7 +96,6 @@ export default class PresenterMain {
 
   #handleModelEvent = (updateType, data) => {
     // В зависимости от типа изменений решаем, что делать:
-    console.log(updateType);
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить точку (избранное)

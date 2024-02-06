@@ -1,12 +1,12 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { ucFirst } from '../utils/common.js';
 import { humanizeDate, DATE_FORMAT_FIRST } from '../utils/event.js';
-import { TYPES } from '../const.js';
 import flatpickr from 'flatpickr';
 
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createTypesList(types, type) {
+
   return types.map((typesItem) => `
           <div class="event__type-item">
             <input id="event-type-${typesItem}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typesItem}"${typesItem === type ? ' checked' : ''}>
@@ -40,8 +40,8 @@ function createDestinationsList(destinationsList, destinationName) {
     </datalist>`;
 }
 
-function createDestinationTemplate({ name, description, photos }) {
-  const photosTemplate = createPhotosTemplate(photos);
+function createDestinationTemplate({ name, description, pictures }) {
+  const photosTemplate = createPhotosTemplate(pictures);
 
   return `<section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -50,11 +50,11 @@ function createDestinationTemplate({ name, description, photos }) {
           </section>`;
 }
 
-function createPhotosTemplate(photos) {
-  return photos.length > 0 ?
+function createPhotosTemplate(pictures) {
+  return pictures.length > 0 ?
     `<div class="event__photos-container">
       <div class="event__photos-tape">
-        ${photos.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join('')}
+        ${pictures.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join('')}
       </div>
     </div>` : '';
 }
@@ -62,13 +62,13 @@ function createPhotosTemplate(photos) {
 function createEditableEvent(point, offersByType, destinationsAll, destinationById) {
 
   const { id, type, dateFrom, dateTo, price } = point;
-  const { name, description, photos } = typeof destinationById !== 'undefined' && destinationById !== '' ? destinationById : '';
-  const destinationTemplate = typeof destinationById !== 'undefined' && destinationById !== '' ? (createDestinationTemplate({ name, description, photos })) : '';
+  const { name, description, pictures } = typeof destinationById !== 'undefined' && destinationById !== '' ? destinationById : '';
+  const destinationTemplate = typeof destinationById !== 'undefined' && destinationById !== '' ? (createDestinationTemplate({ name, description, pictures })) : '';
   const destinationsListTemplate = createDestinationsList(destinationsAll, name);
 
   const dateFromHumanized = humanizeDate(dateFrom, DATE_FORMAT_FIRST);
   const dateToHumanized = humanizeDate(dateTo, DATE_FORMAT_FIRST);
-
+  const TYPES = point.offersAll.map((offer) => offer.type).join(' ').split(' ');
   const typesList = createTypesList(TYPES, type);
   const offersTemplate = createOffersTemplate(offersByType, point.offers);
 
@@ -271,7 +271,7 @@ export default class EditableEvent extends AbstractStatefulView {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateFrom,
         enableTime: true,
-        //time_24hr: true,
+        'time_24hr': true,
         onChange: this.#dateChangeHandlerFrom, // На событие flatpickr передаём наш колбэк
       },
     );
@@ -284,7 +284,7 @@ export default class EditableEvent extends AbstractStatefulView {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateTo,
         enableTime: true,
-        //time_24hr: true,
+        'time_24hr': true,
         minDate: this._state.dateFrom,
         onChange: this.#dateChangeHandlerTo, // На событие flatpickr передаём наш колбэк
       },
@@ -302,7 +302,6 @@ export default class EditableEvent extends AbstractStatefulView {
 
   static parseStateToPoint(state) {
     const point = {...state};
-
     return point;
   }
 }

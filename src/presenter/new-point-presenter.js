@@ -1,6 +1,5 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import EditableEvent from '../view/editable-event.js';
-// import { generatePointId } from '../mock/point.js';
 import {UserAction, UpdateType} from '../const.js';
 import { isEscapeKey } from '../utils/common.js';
 
@@ -63,13 +62,10 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
-  #handleFormSubmit = (point) => {
+  #handleFormSubmit = () => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      // Пока у нас нет сервера, который бы после сохранения
-      // выдывал честный id задачи, нам нужно позаботиться об этом самим
-      {id: generatePointId(), ...point},
     );
     this.destroy();
   };

@@ -3,13 +3,14 @@ import TripInfo from '../view/trip-info.js';
 import TripInfoContent from '../view/trip-info-content.js';
 import TripCost from '../view/trip-cost.js';
 import NewPointPresenter from './new-point-presenter.js';
-import FilterPresenter from '../presenter/presenter-filter.js';
 import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
 import Loading from '../view/loading.js';
 import PresenterPoint from './presenter-point.js';
 import {filter} from '../utils/filter.js';
+import FilterModel from '../model/filter-model.js';
+import FilterPresenter from '../presenter/presenter-filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 
@@ -22,7 +23,7 @@ export default class PresenterMain {
   #tripInfoCostComponent = new TripCost();
   #loadingComponent = new Loading();
 
-  #filterModel = null;
+  #filterModel = new FilterModel();
 
   #presenterContainer = null;
   #pointsModel = null;
@@ -35,15 +36,11 @@ export default class PresenterMain {
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
 
-  constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, filterModel, onNewPointDestroy}) {
+  constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, onNewPointDestroy}) {
     this.#presenterTripMain = presenterTripMain;
     this.#filtersContainer = filtersContainer;
     this.#presenterContainer = presenterContainer;
     this.#pointsModel = pointsModel;
-    this.#filterModel = filterModel;
-
-    this.#pointsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
 
     this.#newPointPresenter = new NewPointPresenter({
       pointsModel: this.#pointsModel,
@@ -51,14 +48,14 @@ export default class PresenterMain {
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy
     });
-  }
 
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+  }
 
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
     const filteredPoints = filter[this.#filterType](points);
-
     switch (this.#currentSortType) {
       case SortType.TIME:
         return filteredPoints.sort(sortEventsByTime).reverse();

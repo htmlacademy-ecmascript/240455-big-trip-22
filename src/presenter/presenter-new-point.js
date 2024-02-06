@@ -62,13 +62,19 @@ export default class PresenterNewPoint {
     document.removeEventListener('keydown', this.#handlEescKeyDown);
   }
 
+  setSaving() {
+    this.#eventEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
       {...point, isFavorite: false},
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {

@@ -50,6 +50,7 @@ export default class PresenterMain {
     });
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
@@ -95,6 +96,7 @@ export default class PresenterMain {
 
   #handleModelEvent = (updateType, data) => {
     // В зависимости от типа изменений решаем, что делать:
+    console.log(updateType);
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить точку (избранное)

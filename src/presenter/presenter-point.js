@@ -108,6 +108,23 @@ export default class PresenterPoint {
     this.#mode = Mode.DEFAULT;
   }
 
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointEditComponent.shake(resetFormState);
+  }
+
   #replaceEventToForm() {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#handlEescKeyDown);
@@ -160,6 +177,5 @@ export default class PresenterPoint {
       UpdateType.MINOR,
       point,
     );
-    this.#replaceFormToEvent();
   };
 }

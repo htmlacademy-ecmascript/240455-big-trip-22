@@ -64,7 +64,8 @@ export default class PresenterPoint {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointEditComponent, prevPointEditComponent);
+      replace(this.#pointComponent, prevPointEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -83,20 +84,55 @@ export default class PresenterPoint {
     remove(this.#pointEditComponent);
   }
 
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
   #replaceFormToEvent() {
     replace(this.#pointComponent, this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
     this.#mode = Mode.DEFAULT;
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointEditComponent.shake(resetFormState);
   }
 
   #replaceEventToForm() {
     replace(this.#pointEditComponent, this.#pointComponent);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#handleEscKeyDown);
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
-  #escKeyDownHandler = (evt) => {
+  #handleEscKeyDown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       this.#handleFormClose();
@@ -133,7 +169,6 @@ export default class PresenterPoint {
       isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
       update,
     );
-    this.#replaceFormToEvent();
   };
 
   #handleDeleteClick = (point) => {
@@ -142,6 +177,5 @@ export default class PresenterPoint {
       UpdateType.MINOR,
       point,
     );
-    this.#replaceFormToEvent();
   };
 }

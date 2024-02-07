@@ -1,34 +1,39 @@
 import PresenterMain from './presenter/presenter-main.js';
-import MockService from './service/mock-service.js';
-import PointsModel from './model/point-model.js';
-import FilterModel from './model/filter-model.js';
+import PointsModel from './model/points-model.js';
+import PointsApiService from './points-api-service.js';
 
-const mockService = new MockService();
-const pointsModel = new PointsModel(mockService);
-const filterModel = new FilterModel();
+const AUTHORIZATION = 'Basic G5flmyeZ9tPBUhDi';
+const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
+
 const siteTripMainContainer = document.querySelector('.trip-main');
 const siteFiltersContainer = document.querySelector('.trip-controls__filters');
 const siteTripEventsContainer = document.querySelector('.trip-events');
-const newEventButtonElement = document.querySelector('.trip-main__event-add-btn');
-newEventButtonElement.addEventListener('click', handleNewEventButtonClick);
+const newEventButtonContainer = document.querySelector('.trip-main__event-add-btn');
+
+const pointsModel = new PointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
+});
+
+newEventButtonContainer.addEventListener('click', handleNewEventButtonClick);
 
 const presenterMain = new PresenterMain({
   presenterTripMain: siteTripMainContainer,
   filtersContainer: siteFiltersContainer,
   presenterContainer: siteTripEventsContainer,
   pointsModel,
-  filterModel,
-  onNewPointDestroy: handleNewPointFormClose
+  onNewPointDestroy: handleNewPointFormClose,
+  newEventButtonContainer
 });
 
 function handleNewPointFormClose() {
-  newEventButtonElement.disabled = false;
+  newEventButtonContainer.disabled = false;
 }
 
 function handleNewEventButtonClick() {
   presenterMain.createPoint();
-  newEventButtonElement.disabled = true;
+  newEventButtonContainer.disabled = true;
 }
 
 presenterMain.init();
+pointsModel.init();
 

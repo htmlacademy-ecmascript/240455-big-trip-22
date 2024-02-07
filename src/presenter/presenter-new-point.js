@@ -1,10 +1,9 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import EditableEvent from '../view/editable-event.js';
-import { generatePointId } from '../mock/point.js';
 import {UserAction, UpdateType} from '../const.js';
 import { isEscapeKey } from '../utils/common.js';
 
-export default class NewPointPresenter {
+export default class PresenterNewPoint {
   #pointsModel = null;
   #eventsListContainer = null;
   #handleDataChange = null;
@@ -47,7 +46,7 @@ export default class NewPointPresenter {
 
     render(this.#eventEditComponent, this.#eventsListContainer, RenderPosition.AFTERBEGIN);
 
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#handleEscKeyDown);
   }
 
   destroy() {
@@ -60,25 +59,41 @@ export default class NewPointPresenter {
     remove(this.#eventEditComponent);
     this.#eventEditComponent = null;
 
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
+  }
+
+  setSaving() {
+    this.#eventEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#eventEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#eventEditComponent.shake(resetFormState);
   }
 
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      // Пока у нас нет сервера, который бы после сохранения
-      // выдывал честный id задачи, нам нужно позаботиться об этом самим
-      {id: generatePointId(), ...point},
+      {...point, isFavorite: false},
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {
     this.destroy();
   };
 
-  #escKeyDownHandler = (evt) => {
+  #handleEscKeyDown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       this.destroy();

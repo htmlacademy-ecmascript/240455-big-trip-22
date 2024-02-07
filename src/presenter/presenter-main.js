@@ -1,16 +1,26 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import TripInfo from '../view/trip-info.js';
 import TripInfoContent from '../view/trip-info-content.js';
 import TripCost from '../view/trip-cost.js';
-import NewPointPresenter from './new-point-presenter.js';
-import FilterPresenter from '../presenter/presenter-filter.js';
+import PresenterNewPoint from './presenter-new-point.js';
 import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
+import Loading from '../view/loading.js';
 import PresenterPoint from './presenter-point.js';
-import {filter} from '../utils/filter.js';
+import {filterBy} from '../utils/filterby.js';
+import FilterModel from '../model/filter-model.js';
+import PresenterFilter from '../presenter/presenter-filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
+import FailedLoading from '../view/failed-loading.js';
+
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class PresenterMain {
   #presenterTripMain = null;
@@ -19,8 +29,10 @@ export default class PresenterMain {
   #tripInfoComponent = new TripInfo();
   #tripInfoMainComponent = new TripInfoContent();
   #tripInfoCostComponent = new TripCost();
+  #loadingComponent = new Loading();
+  #failedLoadingComponent = new FailedLoading();
 
-  #filterModel = null;
+  #filterModel = new FilterModel();
 
   #presenterContainer = null;
   #pointsModel = null;
@@ -31,31 +43,36 @@ export default class PresenterMain {
   #newPointPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
+  #newEventButtonContainer = null;
 
-  constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, filterModel, onNewPointDestroy}) {
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
+
+  constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, onNewPointDestroy, newEventButtonContainer}) {
     this.#presenterTripMain = presenterTripMain;
     this.#filtersContainer = filtersContainer;
     this.#presenterContainer = presenterContainer;
     this.#pointsModel = pointsModel;
-    this.#filterModel = filterModel;
+    this.#newEventButtonContainer = newEventButtonContainer;
 
-    this.#pointsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
-
-    this.#newPointPresenter = new NewPointPresenter({
+    this.#newPointPresenter = new PresenterNewPoint({
       pointsModel: this.#pointsModel,
       eventsListContainer:  this.#eventsListComponent.element,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy
     });
-  }
 
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+  }
 
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filter[this.#filterType](points);
-
+    const filteredPoints = filterBy[this.#filterType](points);
     switch (this.#currentSortType) {
       case SortType.TIME:
         return filteredPoints.sort(sortEventsByTime).reverse();
@@ -79,22 +96,41 @@ export default class PresenterMain {
     this.#newPointPresenter.init();
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#pointsModel.updatePoint(updateType, update);
+        this.#presentersPoint.get(update.id).setSaving();
+        try {
+          await this.#pointsModel.updatePoint(updateType, update);
+        } catch(err) {
+          this.#presentersPoint.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
-        this.#pointsModel.addPoint(updateType, update);
+        this.#newPointPresenter.setSaving();
+        try {
+          await this.#pointsModel.addPoint(updateType, update);
+        } catch(err) {
+          this.#newPointPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
-        this.#pointsModel.deletePoint(updateType, update);
+        this.#presentersPoint.get(update.id).setDeleting();
+        try {
+          await this.#pointsModel.deletePoint(updateType, update);
+        } catch(err) {
+          this.#presentersPoint.get(update.id).setAborting();
+        }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
     // В зависимости от типа изменений решаем, что делать:
+
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить точку (избранное)
@@ -108,6 +144,17 @@ export default class PresenterMain {
         // - обновить всю доску (например, при переключении фильтра)
         this.#clearMain({resetSortType: true});
         this.#renderMain();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderMain();
+        break;
+      case UpdateType.ERROR:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#clearMain();
+        this.#renderFailedLoading();
         break;
     }
   };
@@ -128,7 +175,7 @@ export default class PresenterMain {
   };
 
   #renderFilters() {
-    const filterPresenter = new FilterPresenter({
+    const filterPresenter = new PresenterFilter({
       filterContainer: this.#filtersContainer,
       filterModel: this.#filterModel,
       pointsModel: this.#pointsModel
@@ -142,6 +189,17 @@ export default class PresenterMain {
       onSortTypeChange: this.#handleSortTypeChange
     });
     render(this.#sortComponent, this.#presenterContainer); //сортировка
+  }
+
+  #renderLoading() {
+    remove(this.#sortComponent);
+    this.#newEventButtonContainer.disabled = true;
+    render(this.#loadingComponent, this.#presenterContainer); //нет точек маршрута
+  }
+
+  #renderFailedLoading() {
+    this.#newEventButtonContainer.disabled = true;
+    render(this.#failedLoadingComponent, this.#presenterContainer);
   }
 
   #renderNoPoints() {
@@ -169,17 +227,20 @@ export default class PresenterMain {
   }
 
   #renderMain() {
-    if (this.points.length < 1) {
-      this.#renderNoPoints();
-      return;
-    }
+    if (this.#isLoading) {
+      this.#renderLoading();
+    } else {
+      if (this.points.length < 1) {
+        this.#renderNoPoints();
+        return;
+      }
+      this.#newEventButtonContainer.disabled = false;
 
-    this.#renderSort();
+      this.#renderSort();
 
-    this.#renderList();
+      this.#renderList();
 
-    for (let i = 0; i < this.points.length; i++) {
-      this.#renderPoint(this.points[i]);
+      this.points.forEach((point) => this.#renderPoint(point));
     }
   }
 
@@ -189,6 +250,7 @@ export default class PresenterMain {
     this.#presentersPoint.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
     remove(this.#noEventsComponent);
 
     if (this.#noEventsComponent) {

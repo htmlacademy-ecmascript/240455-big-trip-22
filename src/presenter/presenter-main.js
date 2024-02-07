@@ -12,15 +12,9 @@ import PresenterPoint from './presenter-point.js';
 import {filterBy} from '../utils/filterby.js';
 import FilterModel from '../model/filter-model.js';
 import PresenterFilter from '../presenter/presenter-filter.js';
-import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
+import { SortType, UpdateType, UserAction, FilterType, TimeLimit } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 import FailedLoading from '../view/failed-loading.js';
-
-
-const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000,
-};
 
 export default class PresenterMain {
   #presenterTripMain = null;
@@ -111,7 +105,6 @@ export default class PresenterMain {
 
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
-
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#presentersPoint.get(update.id).setSaving();

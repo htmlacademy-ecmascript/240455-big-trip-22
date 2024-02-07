@@ -61,7 +61,7 @@ function createPhotosTemplate(pictures) {
 
 function createEditableEvent(point, offersByType, destinationsAll, destinationById) {
 
-  const { id, type, dateFrom, dateTo, price, isDisabled, isDeleting, isSaving } = point;
+  const { type, dateFrom, dateTo, price, isDisabled, isDeleting, isSaving } = point;
 
   const isExistDestinationById = destinationById !== undefined && destinationById !== '';
   const { name, description, pictures } = isExistDestinationById ? destinationById : '';
@@ -194,7 +194,7 @@ export default class EditableEvent extends AbstractStatefulView {
     this.element.querySelectorAll('.event__type-label').forEach((element) => {
       element.addEventListener('click', this.#eventTypeClickHandler);
     });
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationChangeHandler);
     this.element.querySelectorAll('.event__offer-checkbox').forEach((element) => {
       element.addEventListener('change', this.#eventOfferChangeHandler);
     });

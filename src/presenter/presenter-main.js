@@ -90,6 +90,12 @@ export default class PresenterMain {
     this.#renderMain();
   }
 
+  createNoPoints() {
+    if (this.points.length < 1) {
+      this.#renderNoPoints();
+    }
+  }
+
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
@@ -97,11 +103,10 @@ export default class PresenterMain {
 
     if (this.#noEventsComponent) {
       remove(this.#noEventsComponent);
-      this.#renderSort();
       this.#renderList();
     }
-
     this.#newPointPresenter.init();
+
   }
 
   #handleViewAction = async (actionType, updateType, update) => {

@@ -2,7 +2,7 @@ import PresenterMain from './presenter/presenter-main.js';
 import PointsModel from './model/points-model.js';
 import PointsApiService from './points-api-service.js';
 
-const AUTHORIZATION = 'Basic G5flmyeZ9tPBUhDiyuytthkji;lk';
+const AUTHORIZATION = 'Basic G5flmyeZ9,jbtPBUhDiyuytthkdgdji;lk';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
 const siteTripMainContainer = document.querySelector('.trip-main');
@@ -27,6 +27,7 @@ const presenterMain = new PresenterMain({
 
 function handleNewPointFormClose() {
   newEventButtonContainer.disabled = false;
+  presenterMain.createNoPoints();
 }
 
 function handleNewEventButtonClick() {

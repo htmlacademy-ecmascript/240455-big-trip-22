@@ -104,7 +104,7 @@ export default class PresenterPoint {
 
   #replaceFormToEvent() {
     replace(this.#pointComponent, this.#pointEditComponent);
-    document.removeEventListener('keydown', this.#handlEescKeyDown);
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
     this.#mode = Mode.DEFAULT;
   }
 
@@ -127,12 +127,12 @@ export default class PresenterPoint {
 
   #replaceEventToForm() {
     replace(this.#pointEditComponent, this.#pointComponent);
-    document.addEventListener('keydown', this.#handlEescKeyDown);
+    document.addEventListener('keydown', this.#handleEscKeyDown);
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
-  #handlEescKeyDown = (evt) => {
+  #handleEscKeyDown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       this.#handleFormClose();

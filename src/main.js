@@ -12,7 +12,6 @@ const newEventButtonContainer = document.querySelector('.trip-main__event-add-bt
 
 const pointsModel = new PointsModel({
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION),
-  newEventButtonContainer,
 });
 
 newEventButtonContainer.addEventListener('click', handleNewEventButtonClick);
@@ -22,7 +21,8 @@ const presenterMain = new PresenterMain({
   filtersContainer: siteFiltersContainer,
   presenterContainer: siteTripEventsContainer,
   pointsModel,
-  onNewPointDestroy: handleNewPointFormClose
+  onNewPointDestroy: handleNewPointFormClose,
+  newEventButtonContainer
 });
 
 function handleNewPointFormClose() {
@@ -35,8 +35,5 @@ function handleNewEventButtonClick() {
 }
 
 presenterMain.init();
-pointsModel.init()
-  .finally(() => {
-    newEventButtonContainer.disabled = false;
-  });
+pointsModel.init();
 

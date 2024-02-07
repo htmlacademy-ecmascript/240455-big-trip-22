@@ -46,7 +46,7 @@ export default class PresenterNewPoint {
 
     render(this.#eventEditComponent, this.#eventsListContainer, RenderPosition.AFTERBEGIN);
 
-    document.addEventListener('keydown', this.#handlEescKeyDown);
+    document.addEventListener('keydown', this.#handleEscKeyDown);
   }
 
   destroy() {
@@ -59,7 +59,7 @@ export default class PresenterNewPoint {
     remove(this.#eventEditComponent);
     this.#eventEditComponent = null;
 
-    document.removeEventListener('keydown', this.#handlEescKeyDown);
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
   }
 
   setSaving() {
@@ -93,7 +93,7 @@ export default class PresenterNewPoint {
     this.destroy();
   };
 
-  #handlEescKeyDown = (evt) => {
+  #handleEscKeyDown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
       this.destroy();

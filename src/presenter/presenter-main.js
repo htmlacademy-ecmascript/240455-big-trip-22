@@ -44,17 +44,19 @@ export default class PresenterMain {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #newEventButtonContainer = null;
 
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, onNewPointDestroy}) {
+  constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, onNewPointDestroy, newEventButtonContainer}) {
     this.#presenterTripMain = presenterTripMain;
     this.#filtersContainer = filtersContainer;
     this.#presenterContainer = presenterContainer;
     this.#pointsModel = pointsModel;
+    this.#newEventButtonContainer = newEventButtonContainer;
 
     this.#newPointPresenter = new PresenterNewPoint({
       pointsModel: this.#pointsModel,
@@ -128,6 +130,7 @@ export default class PresenterMain {
 
   #handleModelEvent = (updateType, data) => {
     // В зависимости от типа изменений решаем, что делать:
+
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить точку (избранное)
@@ -190,10 +193,12 @@ export default class PresenterMain {
 
   #renderLoading() {
     remove(this.#sortComponent);
+    this.#newEventButtonContainer.disabled = true;
     render(this.#loadingComponent, this.#presenterContainer); //нет точек маршрута
   }
 
   #renderFailedLoading() {
+    this.#newEventButtonContainer.disabled = true;
     render(this.#failedLoadingComponent, this.#presenterContainer);
   }
 
@@ -229,6 +234,8 @@ export default class PresenterMain {
         this.#renderNoPoints();
         return;
       }
+      this.#newEventButtonContainer.disabled = false;
+
       this.#renderSort();
 
       this.#renderList();

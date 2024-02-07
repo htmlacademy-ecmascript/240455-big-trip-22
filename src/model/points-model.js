@@ -6,12 +6,10 @@ export default class PointsModel extends Observable {
   #points = [];
   #destinations = [];
   #offers = [];
-  #newEventButtonContainer = null;
 
-  constructor({pointsApiService, newEventButtonContainer}) {
+  constructor({pointsApiService}) {
     super();
     this.#pointsApiService = pointsApiService;
-    this.#newEventButtonContainer = newEventButtonContainer;
   }
 
   get points() {
@@ -38,7 +36,6 @@ export default class PointsModel extends Observable {
 
   async init() {
     try {
-      this.#newEventButtonContainer.disabled = true;
       const points = await this.#pointsApiService.points;
       this.#points = points.map(this.#adaptToClient);
       this.#offers = await this.#pointsApiService.offers;

@@ -200,7 +200,7 @@ export default class EditableEvent extends AbstractStatefulView {
       element.addEventListener('change', this.#eventOfferChangeHandler);
     });
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
-    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
 
     this.#setDatepickerFrom();
     this.#setDatepickerTo();

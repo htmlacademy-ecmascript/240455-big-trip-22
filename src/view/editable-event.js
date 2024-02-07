@@ -79,10 +79,10 @@ function createEditableEvent(point, offersByType, destinationsAll, destinationBy
 
   const resetButton = point.id ?
     `<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>
-      ${isDeleting ? 'Deleting' : 'Delete'}
+      ${isDeleting ? 'Deleting...' : 'Delete'}
     </button>` :
     `<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>
-      ${isDeleting ? 'Canceling' : 'Cancel'}
+      ${isDeleting ? 'Canceling...' : 'Cancel'}
     </button>`;
 
 

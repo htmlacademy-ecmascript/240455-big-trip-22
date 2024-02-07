@@ -1,4 +1,5 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import TripInfo from '../view/trip-info.js';
 import TripInfoContent from '../view/trip-info-content.js';
 import TripCost from '../view/trip-cost.js';
@@ -13,6 +14,11 @@ import FilterModel from '../model/filter-model.js';
 import PresenterFilter from '../presenter/presenter-filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class PresenterMain {
   #presenterTripMain = null;
@@ -35,6 +41,11 @@ export default class PresenterMain {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
   constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, onNewPointDestroy}) {
     this.#presenterTripMain = presenterTripMain;
@@ -81,6 +92,8 @@ export default class PresenterMain {
   }
 
   #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#presentersPoint.get(update.id).setSaving();
@@ -107,6 +120,7 @@ export default class PresenterMain {
         }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {

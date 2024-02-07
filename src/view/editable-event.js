@@ -171,7 +171,7 @@ export default class EditableEvent extends AbstractStatefulView {
 
   reset(point) {
     this._setState(EditableEvent.parsePointToState(point));
-    this.updateElement(this._setState);
+    this.updateElement(this._state);
   }
 
   _restoreHandlers() {
@@ -232,8 +232,8 @@ export default class EditableEvent extends AbstractStatefulView {
 
     const price = Math.round(evt.target.value);
 
-    this.updateElement({
-      price: price,
+    this._setState({
+      price,
     });
   };
 
@@ -265,7 +265,6 @@ export default class EditableEvent extends AbstractStatefulView {
         onChange: this.#dateChangeHandlerFrom, // На событие flatpickr передаём наш колбэк
       },
     );
-    // input.readOnly = false; //required работает
   }
 
   #setDatepickerTo() {
@@ -281,7 +280,6 @@ export default class EditableEvent extends AbstractStatefulView {
         onChange: this.#dateChangeHandlerTo, // На событие flatpickr передаём наш колбэк
       },
     );
-    // input.readOnly = false; //required работает
   }
 
   #dateChangeHandlerFrom = ([userDate]) => {

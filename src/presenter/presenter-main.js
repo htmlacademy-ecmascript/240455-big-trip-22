@@ -93,6 +93,14 @@ export default class PresenterMain {
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newEventButtonContainer.disabled = false;
+
+    if (this.#noEventsComponent) {
+      remove(this.#noEventsComponent);
+      this.#renderSort();
+      this.#renderList();
+    }
+
     this.#newPointPresenter.init();
   }
 
@@ -206,6 +214,7 @@ export default class PresenterMain {
     this.#noEventsComponent = new NoEvents({
       filterType: this.#filterType
     });
+    this.#newEventButtonContainer.disabled = false;
     remove(this.#sortComponent);
     render(this.#noEventsComponent, this.#presenterContainer); //нет точек маршрута
   }
@@ -230,6 +239,7 @@ export default class PresenterMain {
     if (this.#isLoading) {
       this.#renderLoading();
     } else {
+
       if (this.points.length < 1) {
         this.#renderNoPoints();
         return;

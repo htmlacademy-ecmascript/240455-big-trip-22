@@ -7,7 +7,6 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createTypesList(types, type, isDisabled) {
-
   return types.map((typesItem) => `
           <div class="event__type-item">
             <input id="event-type-${typesItem}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typesItem}"${typesItem === type ? ' checked' : ''} ${isDisabled ? 'disabled' : ''}>
@@ -90,11 +89,11 @@ function createEditableEvent(point, offersByType, destinationsAll, destinationBy
             <form class="event event--edit" action="#" method="post">
               <header class="event__header">
                 <div class="event__type-wrapper">
-                  <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
+                  <label class="event__type  event__type-btn" for="event-type-toggle">
                     <span class="visually-hidden">Choose event type</span>
                     <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="${type}">
                   </label>
-                  <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox" ${isDisabled ? 'disabled' : ''}>
+                  <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
                   <div class="event__type-list">
                     <fieldset class="event__type-group">

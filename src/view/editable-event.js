@@ -40,12 +40,12 @@ function createDestinationsList(destinationsList, destinationName, isDisabled) {
     </datalist>`;
 }
 
-function createDestinationTemplate({ name, description, pictures }) {
+function createDestinationTemplate({ description, pictures }) {
   const photosTemplate = createPhotosTemplate(pictures);
 
   return `<section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${name}. ${description}</p>
+            <p class="event__destination-description">${description}</p>
             ${photosTemplate}
           </section>`;
 }
@@ -65,7 +65,7 @@ function createEditableEvent(point, offersByType, destinationsAll, destinationBy
 
   const isExistDestinationById = destinationById !== undefined && destinationById !== '';
   const { name, description, pictures } = isExistDestinationById ? destinationById : '';
-  const destinationTemplate = isExistDestinationById ? (createDestinationTemplate({ name, description, pictures })) : '';
+  const destinationTemplate = description ? (createDestinationTemplate({ name, description, pictures })) : '';
   const destinationsListTemplate = createDestinationsList(destinationsAll, name ? name : '');
 
   const dateFromHumanized = humanizeDate(dateFrom, DATE_FORMAT_FIRST);
@@ -194,12 +194,12 @@ export default class EditableEvent extends AbstractStatefulView {
     this.element.querySelectorAll('.event__type-label').forEach((element) => {
       element.addEventListener('click', this.#eventTypeClickHandler);
     });
-    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.element.querySelectorAll('.event__offer-checkbox').forEach((element) => {
       element.addEventListener('change', this.#eventOfferChangeHandler);
     });
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
 
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
@@ -223,6 +223,7 @@ export default class EditableEvent extends AbstractStatefulView {
     this.updateElement({
       type: type,
       offersByType: offersByType.offers,
+      offers: [],
     });
   };
 

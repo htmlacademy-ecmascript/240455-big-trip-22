@@ -12,15 +12,9 @@ import PresenterPoint from './presenter-point.js';
 import {filterBy} from '../utils/filterby.js';
 import FilterModel from '../model/filter-model.js';
 import PresenterFilter from '../presenter/presenter-filter.js';
-import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
+import { SortType, UpdateType, UserAction, FilterType, TimeLimit } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 import FailedLoading from '../view/failed-loading.js';
-
-
-const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000,
-};
 
 export default class PresenterMain {
   #presenterTripMain = null;
@@ -90,15 +84,27 @@ export default class PresenterMain {
     this.#renderMain();
   }
 
+  createNoPoints() {
+    if (this.points.length < 1) {
+      this.#renderNoPoints();
+    }
+  }
+
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newEventButtonContainer.disabled = false;
+
+    if (this.#noEventsComponent) {
+      remove(this.#noEventsComponent);
+      this.#renderList();
+    }
     this.#newPointPresenter.init();
+
   }
 
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
-
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#presentersPoint.get(update.id).setSaving();
@@ -206,6 +212,7 @@ export default class PresenterMain {
     this.#noEventsComponent = new NoEvents({
       filterType: this.#filterType
     });
+    this.#newEventButtonContainer.disabled = false;
     remove(this.#sortComponent);
     render(this.#noEventsComponent, this.#presenterContainer); //нет точек маршрута
   }
@@ -230,6 +237,7 @@ export default class PresenterMain {
     if (this.#isLoading) {
       this.#renderLoading();
     } else {
+
       if (this.points.length < 1) {
         this.#renderNoPoints();
         return;

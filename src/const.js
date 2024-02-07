@@ -27,4 +27,17 @@ const UpdateType = {
   ERROR: 'ERROR',
 };
 
-export { FilterType, SortType, UserAction, UpdateType };
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+const DateType = {
+  DATE_FORMAT_FIRST: 'D/MM/YY H:mm',
+  DATE_FORMAT_SECOND: 'YYYY-MM-DD',
+  DATE_FORMAT_THIRD: 'MMM D',
+  DATE_FORMAT_FOURTH: 'YYYY-MM-DDTHH:mm',
+  TIME_FORMAT: 'HH:mm',
+};
+
+export { FilterType, SortType, UserAction, UpdateType, TimeLimit, DateType };

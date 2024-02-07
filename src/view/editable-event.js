@@ -7,7 +7,6 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 function createTypesList(types, type, isDisabled) {
-
   return types.map((typesItem) => `
           <div class="event__type-item">
             <input id="event-type-${typesItem}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typesItem}"${typesItem === type ? ' checked' : ''} ${isDisabled ? 'disabled' : ''}>
@@ -22,8 +21,8 @@ function createOffersTemplate(offersByType, pointsOffers, isDisabled) {
         <div class="event__available-offers">
         ${offersByType.map((offer) =>
     `<div class="event__offer-selector">
-      <input data-event-offer-id="${offer.id}" class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}"${pointsOffers.includes(offer.id) ? ' checked' : ''} ${isDisabled ? 'disabled' : ''}>
-      <label class="event__offer-label" for="event-offer-${offer.id}-1">
+      <input data-event-offer-id="${offer.id}" class="event__offer-checkbox visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${pointsOffers.includes(offer.id) ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
+      <label class="event__offer-label" for="event-offer-${offer.id}">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${offer.price}</span>
@@ -41,12 +40,12 @@ function createDestinationsList(destinationsList, destinationName, isDisabled) {
     </datalist>`;
 }
 
-function createDestinationTemplate({ name, description, pictures }) {
+function createDestinationTemplate({ description, pictures }) {
   const photosTemplate = createPhotosTemplate(pictures);
 
   return `<section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${name}. ${description}</p>
+            <p class="event__destination-description">${description}</p>
             ${photosTemplate}
           </section>`;
 }
@@ -62,11 +61,11 @@ function createPhotosTemplate(pictures) {
 
 function createEditableEvent(point, offersByType, destinationsAll, destinationById) {
 
-  const { id, type, dateFrom, dateTo, price, isDisabled, isDeleting, isSaving } = point;
+  const { type, dateFrom, dateTo, price, isDisabled, isDeleting, isSaving } = point;
 
   const isExistDestinationById = destinationById !== undefined && destinationById !== '';
   const { name, description, pictures } = isExistDestinationById ? destinationById : '';
-  const destinationTemplate = isExistDestinationById ? (createDestinationTemplate({ name, description, pictures })) : '';
+  const destinationTemplate = description ? (createDestinationTemplate({ name, description, pictures })) : '';
   const destinationsListTemplate = createDestinationsList(destinationsAll, name ? name : '');
 
   const dateFromHumanized = humanizeDate(dateFrom, DATE_FORMAT_FIRST);
@@ -90,11 +89,11 @@ function createEditableEvent(point, offersByType, destinationsAll, destinationBy
             <form class="event event--edit" action="#" method="post">
               <header class="event__header">
                 <div class="event__type-wrapper">
-                  <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
+                  <label class="event__type  event__type-btn" for="event-type-toggle">
                     <span class="visually-hidden">Choose event type</span>
                     <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="${type}">
                   </label>
-                  <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox" ${isDisabled ? 'disabled' : ''}>
+                  <input class="event__type-toggle  visually-hidden" id="event-type-toggle" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
                   <div class="event__type-list">
                     <fieldset class="event__type-group">
@@ -172,20 +171,8 @@ export default class EditableEvent extends AbstractStatefulView {
 
   reset(point) {
     this._setState(EditableEvent.parsePointToState(point));
-    this.updateElement(this._setState);
+    this.updateElement(this._state);
   }
-
-  #dateChangeHandlerFrom = ([userDate]) => {
-    this.updateElement({
-      dateFrom: userDate,
-    });
-  };
-
-  #dateChangeHandlerTo = ([userDate]) => {
-    this.updateElement({
-      dateTo: userDate,
-    });
-  };
 
   _restoreHandlers() {
     if (this._state.id) {
@@ -200,7 +187,7 @@ export default class EditableEvent extends AbstractStatefulView {
       element.addEventListener('change', this.#eventOfferChangeHandler);
     });
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
 
     this.#setDatepickerFrom();
     this.#setDatepickerTo();
@@ -224,6 +211,7 @@ export default class EditableEvent extends AbstractStatefulView {
     this.updateElement({
       type: type,
       offersByType: offersByType.offers,
+      offers: [],
     });
   };
 
@@ -244,8 +232,8 @@ export default class EditableEvent extends AbstractStatefulView {
 
     const price = Math.round(evt.target.value);
 
-    this.updateElement({
-      price: price,
+    this._setState({
+      price,
     });
   };
 
@@ -277,13 +265,12 @@ export default class EditableEvent extends AbstractStatefulView {
         onChange: this.#dateChangeHandlerFrom, // На событие flatpickr передаём наш колбэк
       },
     );
-    input.readOnly = false; //required работает
   }
 
   #setDatepickerTo() {
     const input = this.element.querySelector('#event-end-time-1');
     this.#datepicker = flatpickr(
-      this.element.querySelector('#event-end-time-1'),
+      input,
       {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateTo,
@@ -293,8 +280,19 @@ export default class EditableEvent extends AbstractStatefulView {
         onChange: this.#dateChangeHandlerTo, // На событие flatpickr передаём наш колбэк
       },
     );
-    input.readOnly = false; //required работает
   }
+
+  #dateChangeHandlerFrom = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateChangeHandlerTo = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
 
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();

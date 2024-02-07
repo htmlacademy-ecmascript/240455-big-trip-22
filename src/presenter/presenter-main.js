@@ -209,21 +209,19 @@ export default class PresenterMain {
   }
 
   #renderMain() {
-    if (this.points.length < 1) {
-      this.#renderNoPoints();
-      return;
-    }
-
     if (this.#isLoading) {
       this.#renderLoading();
-      return;
+    } else {
+      if (this.points.length < 1) {
+        this.#renderNoPoints();
+        return;
+      }
+      this.#renderSort();
+
+      this.#renderList();
+
+      this.points.forEach((point) => this.#renderPoint(point));
     }
-
-    this.#renderSort();
-
-    this.#renderList();
-
-    this.points.forEach((point) => this.#renderPoint(point));
   }
 
   #clearMain({resetSortType = false} = {}) {

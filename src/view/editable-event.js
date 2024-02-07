@@ -52,7 +52,7 @@ function createDestinationTemplate({ name, description, pictures }) {
 }
 
 function createPhotosTemplate(pictures) {
-  return pictures.length > 0 ?
+  return pictures && pictures.length > 0 ?
     `<div class="event__photos-container">
       <div class="event__photos-tape">
         ${pictures.map((photo) => `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join('')}

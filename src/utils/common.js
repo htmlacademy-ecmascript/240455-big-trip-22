@@ -10,8 +10,4 @@ function ucFirst(str) {
 //проверка нажатия клавиши Esc
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-function updatePoint(points, update) {
-  return points.map((point) => point.id === update.id ? update : point);
-}
-
-export { ucFirst, isEscapeKey, updatePoint };
+export { ucFirst, isEscapeKey };

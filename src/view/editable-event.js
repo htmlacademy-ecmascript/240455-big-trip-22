@@ -174,18 +174,6 @@ export default class EditableEvent extends AbstractStatefulView {
     this.updateElement(this._setState);
   }
 
-  #dateChangeHandlerFrom = ([userDate]) => {
-    this.updateElement({
-      dateFrom: userDate,
-    });
-  };
-
-  #dateChangeHandlerTo = ([userDate]) => {
-    this.updateElement({
-      dateTo: userDate,
-    });
-  };
-
   _restoreHandlers() {
     if (this._state.id) {
       this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
@@ -277,13 +265,13 @@ export default class EditableEvent extends AbstractStatefulView {
         onChange: this.#dateChangeHandlerFrom, // На событие flatpickr передаём наш колбэк
       },
     );
-    input.readOnly = false; //required работает
+    // input.readOnly = false; //required работает
   }
 
   #setDatepickerTo() {
     const input = this.element.querySelector('#event-end-time-1');
     this.#datepicker = flatpickr(
-      this.element.querySelector('#event-end-time-1'),
+      input,
       {
         dateFormat: 'd/m/y H:i',
         defaultDate: this._state.dateTo,
@@ -293,8 +281,20 @@ export default class EditableEvent extends AbstractStatefulView {
         onChange: this.#dateChangeHandlerTo, // На событие flatpickr передаём наш колбэк
       },
     );
-    input.readOnly = false; //required работает
+    // input.readOnly = false; //required работает
   }
+
+  #dateChangeHandlerFrom = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateChangeHandlerTo = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
 
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();

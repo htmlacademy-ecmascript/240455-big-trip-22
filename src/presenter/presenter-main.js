@@ -14,6 +14,8 @@ import FilterModel from '../model/filter-model.js';
 import PresenterFilter from '../presenter/presenter-filter.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
+import FailedLoading from '../view/failed-loading.js';
+
 
 const TimeLimit = {
   LOWER_LIMIT: 350,
@@ -28,6 +30,7 @@ export default class PresenterMain {
   #tripInfoMainComponent = new TripInfoContent();
   #tripInfoCostComponent = new TripCost();
   #loadingComponent = new Loading();
+  #failedLoadingComponent = new FailedLoading();
 
   #filterModel = new FilterModel();
 
@@ -144,6 +147,12 @@ export default class PresenterMain {
         remove(this.#loadingComponent);
         this.#renderMain();
         break;
+      case UpdateType.ERROR:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#clearMain();
+        this.#renderFailedLoading();
+        break;
     }
   };
 
@@ -182,6 +191,10 @@ export default class PresenterMain {
   #renderLoading() {
     remove(this.#sortComponent);
     render(this.#loadingComponent, this.#presenterContainer); //нет точек маршрута
+  }
+
+  #renderFailedLoading() {
+    render(this.#failedLoadingComponent, this.#presenterContainer);
   }
 
   #renderNoPoints() {

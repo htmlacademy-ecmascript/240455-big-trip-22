@@ -1,7 +1,8 @@
 import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { ucFirst } from '../utils/common.js';
-import { humanizeDate, DATE_FORMAT_FIRST } from '../utils/event.js';
+import { humanizeDate } from '../utils/event.js';
+import { DateType } from '../const.js';
 import flatpickr from 'flatpickr';
 
 import 'flatpickr/dist/flatpickr.min.css';
@@ -68,8 +69,8 @@ function createEditableEvent(point, offersByType, destinationsAll, destinationBy
   const destinationTemplate = description ? (createDestinationTemplate({ name, description, pictures })) : '';
   const destinationsListTemplate = createDestinationsList(destinationsAll, name ? name : '');
 
-  const dateFromHumanized = humanizeDate(dateFrom, DATE_FORMAT_FIRST);
-  const dateToHumanized = humanizeDate(dateTo, DATE_FORMAT_FIRST);
+  const dateFromHumanized = humanizeDate(dateFrom, DateType.DATE_FORMAT_FIRST);
+  const dateToHumanized = humanizeDate(dateTo, DateType.DATE_FORMAT_FIRST);
   const TYPES = point.offersAll.map((offer) => offer.type).join(' ').split(' ');
   const typesList = createTypesList(TYPES, type);
   const offersTemplate = createOffersTemplate(offersByType, point.offers);
@@ -145,7 +146,8 @@ export default class EditableEvent extends AbstractStatefulView {
   #handleClick = null;
   #handleFormSubmit = null;
   #handleDeleteClick = null;
-  #datepicker = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor ({point, onFormSubmit, onDeleteClick, onClick}) {
     super();
@@ -166,9 +168,12 @@ export default class EditableEvent extends AbstractStatefulView {
   removeElement() {
     super.removeElement();
 
-    if (this.#datepicker) {
-      this.#datepicker.destroy();
-      this.#datepicker = null;
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom = null;
+    }
+
+    if (this.#datepickerTo) {
+      this.#datepickerTo = null;
     }
   }
 
@@ -258,7 +263,7 @@ export default class EditableEvent extends AbstractStatefulView {
 
   #setDatepickerFrom() {
     const input = this.element.querySelector('#event-start-time-1');
-    this.#datepicker = flatpickr(
+    this.#datepickerFrom = flatpickr(
       input,
       {
         dateFormat: 'd/m/y H:i',
@@ -272,7 +277,7 @@ export default class EditableEvent extends AbstractStatefulView {
 
   #setDatepickerTo() {
     const input = this.element.querySelector('#event-end-time-1');
-    this.#datepicker = flatpickr(
+    this.#datepickerTo = flatpickr(
       input,
       {
         dateFormat: 'd/m/y H:i',

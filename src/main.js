@@ -2,7 +2,7 @@ import PresenterMain from './presenter/presenter-main.js';
 import PointsModel from './model/points-model.js';
 import PointsApiService from './points-api-service.js';
 
-const AUTHORIZATION = 'Basic G5flmyeZ9jbtPBUhDiygdfgduytthkdgdjilk';
+const AUTHORIZATION = 'Basic G5flmyeZ9jbtPBUhDiygdfgduytthkdgdjjilk';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
 const siteTripMainContainer = document.querySelector('.trip-main');

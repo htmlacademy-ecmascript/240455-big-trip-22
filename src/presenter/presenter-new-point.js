@@ -1,6 +1,6 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import EditableEvent from '../view/editable-event.js';
-import {UserAction, UpdateType} from '../const.js';
+import {UserAction, UpdateType, DEFAULT_TYPE} from '../const.js';
 import { isEscapeKey } from '../utils/common.js';
 
 export default class PresenterNewPoint {
@@ -17,7 +17,7 @@ export default class PresenterNewPoint {
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
     this.#point = {
-      type: 'flight',
+      type: DEFAULT_TYPE,
       offers: [],
       destination: '',
       dateFrom: '',

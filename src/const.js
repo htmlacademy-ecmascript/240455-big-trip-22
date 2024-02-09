@@ -40,4 +40,6 @@ const DateType = {
   TIME_FORMAT: 'HH:mm',
 };
 
-export { FilterType, SortType, UserAction, UpdateType, TimeLimit, DateType };
+const DEFAULT_TYPE = 'flight';
+
+export { FilterType, SortType, UserAction, UpdateType, TimeLimit, DateType, DEFAULT_TYPE };

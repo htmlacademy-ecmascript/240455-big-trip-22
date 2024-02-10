@@ -3,12 +3,7 @@ import { isEscapeKey } from '../utils/common.js';
 import { isDatesEqual, isPriceEqual } from '../utils/event.js';
 import EditableEvent from '../view/editable-event.js';
 import Event from '../view/event.js';
-import {UserAction, UpdateType} from '../const.js';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
-};
+import {UserAction, UpdateType, Mode } from '../const.js';
 
 export default class PresenterPoint {
   #pointsModel = null;
@@ -103,8 +98,8 @@ export default class PresenterPoint {
   }
 
   #replaceFormToEvent() {
-    replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#handleEscKeyDown);
+    replace(this.#pointComponent, this.#pointEditComponent);
     this.#mode = Mode.DEFAULT;
   }
 

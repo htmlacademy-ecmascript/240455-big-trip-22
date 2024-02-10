@@ -42,4 +42,10 @@ const DateType = {
 
 const DEFAULT_TYPE = 'flight';
 
-export { FilterType, SortType, UserAction, UpdateType, TimeLimit, DateType, DEFAULT_TYPE };
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+export { FilterType, SortType, UserAction, UpdateType, TimeLimit, DateType, DEFAULT_TYPE, Mode };

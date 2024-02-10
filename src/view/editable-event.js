@@ -76,7 +76,7 @@ function createEditableEvent(point, offersByType, destinationsAll, destinationBy
   const offersTemplate = createOffersTemplate(offersByType, point.offers);
 
   const eventRollupBtn = point.id ? `
-  <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
+  <button class="event__rollup-btn" type="button">
     <span class="visually-hidden">Open event</span>
   </button>` : '';
 
@@ -84,7 +84,7 @@ function createEditableEvent(point, offersByType, destinationsAll, destinationBy
     `<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>
       ${isDeleting ? 'Deleting...' : 'Delete'}
     </button>` :
-    `<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>
+    `<button class="event__reset-btn" type="reset">
       ${isDeleting ? 'Canceling...' : 'Cancel'}
     </button>`;
 

@@ -38,6 +38,7 @@ const DateType = {
   DATE_FORMAT_THIRD: 'MMM D',
   DATE_FORMAT_FOURTH: 'YYYY-MM-DDTHH:mm',
   TIME_FORMAT: 'HH:mm',
+  HEADER_DATE_FORMAT: 'D MMM',
 };
 
 const DEFAULT_TYPE = 'flight';

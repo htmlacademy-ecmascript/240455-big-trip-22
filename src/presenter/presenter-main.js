@@ -1,56 +1,54 @@
-import { render, remove, RenderPosition } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
-import TripInfo from '../view/trip-info.js';
-import TripInfoContent from '../view/trip-info-content.js';
-import TripCost from '../view/trip-cost.js';
+import { SortType, UpdateType, UserAction, FilterType, TimeLimit } from '../const.js';
+import {filterBy} from '../utils/filterby.js';
+import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
+
 import PresenterNewPoint from './presenter-new-point.js';
+import PresenterPoint from './presenter-point.js';
+import PresenterFilter from './presenter-filter.js';
+import PresenterHeaderInfo from './presenter-header-info.js';
+
 import Sorting from '../view/sorting.js';
 import EventsList from '../view/events-list.js';
 import NoEvents from '../view/no-events.js';
 import Loading from '../view/loading.js';
-import PresenterPoint from './presenter-point.js';
-import {filterBy} from '../utils/filterby.js';
-import FilterModel from '../model/filter-model.js';
-import PresenterFilter from '../presenter/presenter-filter.js';
-import { SortType, UpdateType, UserAction, FilterType, TimeLimit } from '../const.js';
-import { sortEventsByTime, sortEventsByPrice, sortEventsByDate } from '../utils/event.js';
 import FailedLoading from '../view/failed-loading.js';
+import FilterModel from '../model/filter-model.js';
 
 export default class PresenterMain {
-  #presenterTripMain = null;
   #filtersContainer = null;
-
-  #tripInfoComponent = new TripInfo();
-  #tripInfoMainComponent = new TripInfoContent();
-  #tripInfoCostComponent = new TripCost();
-  #loadingComponent = new Loading();
-  #failedLoadingComponent = new FailedLoading();
+  #presenterContainer = null;
+  #newEventButtonContainer = null;
 
   #filterModel = new FilterModel();
-
-  #presenterContainer = null;
   #pointsModel = null;
+
+  #loadingComponent = new Loading();
+  #failedLoadingComponent = new FailedLoading();
   #sortComponent = null;
   #eventsListComponent = new EventsList(); //список ul
   #noEventsComponent = null;
   #presentersPoint = new Map();
+  #siteTripMainContainer = null;
+
   #newPointPresenter = null;
+
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
-  #newEventButtonContainer = null;
 
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor ({presenterTripMain, filtersContainer, presenterContainer, pointsModel, onNewPointDestroy, newEventButtonContainer}) {
-    this.#presenterTripMain = presenterTripMain;
+  constructor ({siteTripMainContainer, filtersContainer, presenterContainer, pointsModel, onNewPointDestroy, newEventButtonContainer}) {
     this.#filtersContainer = filtersContainer;
     this.#presenterContainer = presenterContainer;
     this.#pointsModel = pointsModel;
     this.#newEventButtonContainer = newEventButtonContainer;
+    this.#siteTripMainContainer = siteTripMainContainer;
 
     this.#newPointPresenter = new PresenterNewPoint({
       pointsModel: this.#pointsModel,
@@ -77,9 +75,7 @@ export default class PresenterMain {
   }
 
   init() {
-    render(this.#tripInfoComponent, this.#presenterTripMain, RenderPosition.AFTERBEGIN); //инфо
-    render(this.#tripInfoMainComponent, this.#tripInfoComponent.element); //основная инфо
-    render(this.#tripInfoCostComponent, this.#tripInfoComponent.element); //цена
+    this.#renderHeaderInfo();
     this.#renderFilters();
     this.#renderMain();
   }
@@ -179,6 +175,14 @@ export default class PresenterMain {
     this.#newPointPresenter.destroy();
     this.#presentersPoint.forEach((presenter) => presenter.resetView());
   };
+
+  #renderHeaderInfo() {
+    const presenterHeaderInfo = new PresenterHeaderInfo({
+      siteTripMainContainer: this.#siteTripMainContainer,
+      pointsModel: this.#pointsModel
+    });
+    presenterHeaderInfo.init();
+  }
 
   #renderFilters() {
     const filterPresenter = new PresenterFilter({

@@ -34,6 +34,21 @@ export default class PointsModel extends Observable {
       .find((offer) => offer.type === type).offers;
   }
 
+  getOfferById(type, offerId) {
+    const availableOffers = this.getByOffersType(type);
+    const filteredOffers = availableOffers.filter((offers) => offerId.find((id) => offers.id === id));
+
+    return filteredOffers;
+  }
+
+  get totalCost() {
+    return this.#points.reduce((totalCost, point) => {
+      const offersForPoint = this.getOfferById(point.type, point.offers);
+      const offersCost = offersForPoint.reduce((totalOffersCost, offer) => totalOffersCost + (offer ? offer.price : 0), 0);
+      return totalCost + point.price + offersCost;
+    }, 0);
+  }
+
   async init() {
     try {
       const points = await this.#pointsApiService.points;

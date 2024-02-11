@@ -1,6 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { ucFirst } from '../utils/common.js';
-import { humanizeDate, DATE_FORMAT_SECOND, DATE_FORMAT_THIRD, DATE_FORMAT_FOURTH, TIME_FORMAT, getEventDuration } from '../utils/event.js';
+import { humanizeDate, getEventDuration } from '../utils/event.js';
+import { DateType } from '../const.js';
+
 
 function createOffersTemplate(offers) {
   return offers.length > 0 ?
@@ -18,12 +20,12 @@ function createOffersTemplate(offers) {
 function createEvent(point, offers, destination) {
   const { type, dateFrom, dateTo, price, isFavorite } = point;
   const { name } = destination;
-  const dateFromHumanized = humanizeDate(dateFrom, DATE_FORMAT_THIRD);
-  const dateFromHumanizedAttr = humanizeDate(dateFrom, DATE_FORMAT_SECOND);
-  const timeFromHumanized = humanizeDate(dateFrom, TIME_FORMAT);
-  const timeToHumanized = humanizeDate(dateTo, TIME_FORMAT);
-  const timeFromHumanizedAttr = humanizeDate(dateFrom, DATE_FORMAT_FOURTH);
-  const timeToHumanizedAttr = humanizeDate(dateTo, DATE_FORMAT_FOURTH);
+  const dateFromHumanized = humanizeDate(dateFrom, DateType.DATE_FORMAT_THIRD);
+  const dateFromHumanizedAttr = humanizeDate(dateFrom, DateType.DATE_FORMAT_SECOND);
+  const timeFromHumanized = humanizeDate(dateFrom, DateType.TIME_FORMAT);
+  const timeToHumanized = humanizeDate(dateTo, DateType.TIME_FORMAT);
+  const timeFromHumanizedAttr = humanizeDate(dateFrom, DateType.DATE_FORMAT_FOURTH);
+  const timeToHumanizedAttr = humanizeDate(dateTo, DateType.DATE_FORMAT_FOURTH);
   const duration = getEventDuration(dateTo, dateFrom);
   const favorite = isFavorite ? ' event__favorite-btn--active' : '';
   const pointOffers = point.offersByType.filter((offer) => offers.includes(offer.id));

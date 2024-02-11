@@ -38,6 +38,15 @@ const DateType = {
   DATE_FORMAT_THIRD: 'MMM D',
   DATE_FORMAT_FOURTH: 'YYYY-MM-DDTHH:mm',
   TIME_FORMAT: 'HH:mm',
+  HEADER_DATE_FORMAT: 'D MMM',
 };
 
-export { FilterType, SortType, UserAction, UpdateType, TimeLimit, DateType };
+const DEFAULT_TYPE = 'flight';
+
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+export { FilterType, SortType, UserAction, UpdateType, TimeLimit, DateType, DEFAULT_TYPE, Mode };

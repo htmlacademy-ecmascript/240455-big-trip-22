@@ -157,7 +157,8 @@ export default class PresenterPoint {
     const isMinorUpdate =
       !isDatesEqual(this.#point.dateFrom, update.dateFrom) ||
       !isDatesEqual(this.#point.dateTo, update.dateTo) ||
-      !isPriceEqual(this.#point.price, update.price);
+      !isPriceEqual(this.#point.price, update.price) ||
+      !(this.#point.offers === update.offers);
 
     this.#handleDataChange(
       UserAction.UPDATE_POINT,

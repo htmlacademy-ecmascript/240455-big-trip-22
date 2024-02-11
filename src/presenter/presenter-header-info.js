@@ -59,6 +59,7 @@ export default class PresenterHeaderInfo {
     if (points.length === 0) {
       return '';
     }
+
     return this.#pointsModel.totalCost;
   }
 

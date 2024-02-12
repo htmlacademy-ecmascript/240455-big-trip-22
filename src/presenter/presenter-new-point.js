@@ -31,7 +31,7 @@ export default class PresenterNewPoint {
     this.#point = {...this.#point,
       offersAll: this.#pointsModel.offers,
       destinationsAll: this.#pointsModel.destinations,
-      offersByType: this.#pointsModel.getByOffersType('flight'),
+      offersByType: this.#pointsModel.getByOffersType(DEFAULT_TYPE),
     };
 
     if (this.#eventEditComponent !== null) {
